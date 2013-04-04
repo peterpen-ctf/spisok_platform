@@ -5,6 +5,7 @@ Sequel.migration do
       String :name, :null => false
       String :full_name
       TrueClass :is_admin
+      String :password
     end
 
     create_table :contests do
@@ -12,7 +13,7 @@ Sequel.migration do
       String :name, :null => false
       String :full_name
       String :description
-      foreign_key :creator_id, :users
+      foreign_key :organizer_id, :users
     end
 
     create_table :categories do
@@ -26,7 +27,7 @@ Sequel.migration do
       String :name, :null => false
       String :full_name
       String :description
-      foreign_key :creator_id, :users
+      foreign_key :author_id, :users
       foreign_key :contest_id, :contests
       foreign_key :category_id, :categories
 
@@ -41,7 +42,7 @@ Sequel.migration do
       primary_key [:user_id, :task_id]
     end
 
-    create_table :submissions do
+    create_table :attempts do
       foreign_key :user_id, :users
       foreign_key :task_id, :tasks
       DateTime :time

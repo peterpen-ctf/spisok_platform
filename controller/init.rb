@@ -16,3 +16,5 @@ end
 #  end
 #
 require __DIR__('main')
+require __DIR__('user')
+require __DIR__('task')

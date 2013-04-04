@@ -31,9 +31,11 @@ namespace :ramaze do
   task :start do
     require app
 
+    port = 7000
+    puts "Starting server on port #{port}..."
     Ramaze.start(
-      :adapter => :webrick,
-      :port    => 7000,
+      :adapter => :thin,
+      :port    => port,
       :file    => __FILE__,
       :root    => Ramaze.options.roots
     )

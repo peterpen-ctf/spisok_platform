@@ -1,0 +1,28 @@
+<table>
+  <tr>
+    <th>
+      User id
+    </th>
+    <th>
+      User name
+    </th>
+    <th>
+      Full name
+    </th>
+  </tr>
+
+  <?r @users.each do |user| ?>
+  <tr>
+    <td>
+      #{user.id}
+    </td>
+    <td>
+      <a href="#{UserController.r(user.id)}">#{user.name}</a>
+    </td>
+    <td>
+      #{user.full_name}
+    </td>
+  </tr>
+  <?r end ?>
+
+</table>

@@ -1,3 +1,4 @@
+# TODO: add ':null => false' to several columns (password, is_admin etc.)
 Sequel.migration do
   change do
     create_table :users do

@@ -1,0 +1,8 @@
+<?r if @task.nil? ?>
+  No damn task found! 
+<?r else ?>
+<h2>#{@task.name}</h2>
+<h5>Task id: #{@task.id}</h5>
+Task description: <br>
+#{@task.description}
+<?r end ?>

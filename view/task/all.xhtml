@@ -1,0 +1,22 @@
+<table>
+  <tr>
+    <th>
+      Task id
+    </th>
+    <th>
+      Task description
+    </th>
+  </tr>
+
+  <?r @tasks.each do |task| ?>
+  <tr>
+    <td>
+      #{task.id}
+    </td>
+    <td>
+      <a href="#{TaskController.r(task.id)}">#{task.name}</a>
+    </td>
+  </tr>
+  <?r end ?>
+
+</table>

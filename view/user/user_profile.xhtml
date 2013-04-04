@@ -1,0 +1,6 @@
+<?r if @user.nil? ?>
+  No damn user found! 
+<?r else ?>
+<h2>#{@user.name}</h2>
+<h5>User id: #{@user.id}</h5>
+<?r end ?>

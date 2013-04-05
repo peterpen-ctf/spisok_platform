@@ -1,3 +1,7 @@
+<?r if logged_in? and @current_user.is_admin ?>
+  <p> #{TaskController.a('New task', :new)} </p>
+<?r end ?>
+
 <table>
   <tr>
     <th>
@@ -14,7 +18,7 @@
       #{task.id}
     </td>
     <td>
-      <a href="#{TaskController.r(:show, task.id)}">#{task.name}</a>
+      #{TaskController.a(task.name, :show, task.id)}
     </td>
   </tr>
   <?r end ?>

@@ -7,4 +7,10 @@ class Task < Sequel::Model
   many_to_one :category
   one_to_many :attempts
   many_to_many :resources
+
+  plugin :validation_helpers
+
+  def validate
+    validates_presence([:name, :description])
+  end
 end

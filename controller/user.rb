@@ -6,8 +6,8 @@ class UserController < Controller
     redirect UserController.r(:all)
   end
 
-
-  def show(user_id)
+  def show(user_id = nil)
+    redirect UserController.r(:all) if user_id.nil?
     user_id = user_id.to_i
     @user = User[user_id]
     if @user

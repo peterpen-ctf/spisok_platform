@@ -21,7 +21,7 @@
 
                     <nav class="grid_6 last">
                     <ul class="clearfix">  
-                      <li>#{MainController.a('Main', :index)} </li>
+                      <li>#{MainController.a('Main', '/')} </li>
 
                       <li>#{UserController.a('Users', :all)} </li>
                       <li>#{TaskController.a('Tasks', :all)} </li>
@@ -35,6 +35,9 @@
                     </ul>
                     </nav>
                   </div>
+              <?r if logged_in? ?>
+                <div> Logged in as: #{user.name} </div>
+              <?r end ?>
 
                   <?r [:success, :error].each do |type| ?>
                   <?r if flash[type] ?>

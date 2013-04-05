@@ -1,0 +1,6 @@
+
+#{form_for(nil, :method => :post, :action => TaskController.r(:new)) do |f|
+  f.input_text('Task name', :task_name)
+  f.textarea('Task description', :task_desc)
+  f.input_submit('Create task')
+end}

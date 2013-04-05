@@ -1,0 +1,8 @@
+<p>llama:123</p>
+
+#{form_for(nil, :method => :post, :action => UserController.r(:login)) do |f|
+  f.input_text('Username', :username)
+  f.input_password('Password', :password)
+  f.input_submit('Login')
+end}
+

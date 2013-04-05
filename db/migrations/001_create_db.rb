@@ -5,8 +5,8 @@ Sequel.migration do
       primary_key :id
       String :name, :null => false
       String :full_name
-      TrueClass :is_admin
-      String :password
+      TrueClass :is_admin, :default => false
+      String :password, :default => '123'
     end
 
     create_table :contests do

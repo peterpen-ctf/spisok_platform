@@ -6,6 +6,11 @@ class Controller < Ramaze::Controller
   layout :default
   helper :xhtml
   engine :etanni
+
+  helper :user
+  trait :user_model => User
+  
+  helper :blue_form
 end
 
 # Here you can require all your other controllers. Note that if you have multiple

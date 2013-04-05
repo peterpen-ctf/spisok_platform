@@ -14,7 +14,7 @@
       #{task.id}
     </td>
     <td>
-      <a href="#{TaskController.r(task.id)}">#{task.name}</a>
+      <a href="#{TaskController.r(:show, task.id)}">#{task.name}</a>
     </td>
   </tr>
   <?r end ?>

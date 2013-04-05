@@ -21,24 +21,28 @@
 
                     <nav class="grid_6 last">
                     <ul class="clearfix">  
-                      <li>
-                      <a href="/">
-                        Main
-                      </a>
-                      </li>
-                      <li>
-                      <a href="/user/all">
-                        Users
-                      </a>
-                      </li>
-                      <li>
-                      <a href="/task/all">
-                        Tasks
-                      </a>
-                      </li>
+                      <li>#{MainController.a('Main', :index)} </li>
+
+                      <li>#{UserController.a('Users', :all)} </li>
+                      <li>#{TaskController.a('Tasks', :all)} </li>
+
+                      <?r if logged_in? ?>
+                      <li>#{UserController.a('Logout', :logout)}</li>
+                      <?r else ?>
+                      <li>#{UserController.a('Login', :login)}</li>
+                      <?r end ?>
+
                     </ul>
                     </nav>
                   </div>
+
+                  <?r [:success, :error].each do |type| ?>
+                  <?r if flash[type] ?>
+                  <div class="message grid_12 #{type}">
+                    <p>#{flash[type]}</p>
+                  </div>
+                  <?r end ?>
+                  <?r end ?>
 
                 <div id="content" class="grid_12">
                     #{@content}

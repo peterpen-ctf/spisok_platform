@@ -21,7 +21,7 @@
 /* Top part of the website, contains the title and the navigation menu */
 #top
 {
-    background:    #E33F1E;
+    background:    #661F1E;
     height:        70px;
     margin-bottom: 20px;
     padding:       0px 10px;
@@ -79,3 +79,29 @@
         font-size:     13px;
         margin-bottom: 10px;
     }
+
+
+    /* Notifications */
+.message
+{
+  margin-bottom: 20px;
+  text-align:    center;
+ }
+
+.message p
+{
+  margin-bottom: 0px;
+  padding:       5px;
+ }
+
+ .message.success
+ {
+   background: #DAEDA6;
+   color:      #000;
+ }
+
+.message.error
+{
+  background: #E33F1E;
+  color:      #fff;
+}

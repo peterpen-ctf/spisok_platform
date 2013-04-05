@@ -34,3 +34,19 @@ p task1
 p ppc.tasks
 
 p user2.submitted_tasks
+
+new_ppc = Category.first(:name => "ppc")
+p new_ppc.tasks
+
+new_c1 = Contest.first(:name => "contest1")
+p new_c1.tasks
+p task1.contest
+
+p user1.submitted_contests
+
+r1 = Resource.create :name => "r1"
+r2 = Resource.create :name => "r2"
+
+task1.add_resource r1
+r2.add_task task1
+p task1.resources

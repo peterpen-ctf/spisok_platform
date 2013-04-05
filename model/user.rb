@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
 class User < Sequel::Model
-  one_to_many :submitted_tasks, :class => :Task
-  one_to_many :submitted_contests, :class => :Contest
+  one_to_many :submitted_tasks, :class => :Task, :key => :author_id
+  one_to_many :submitted_contests, :class => :Contest, :key => :organizer_id
   one_to_many :attempts
 
   def self.encrypt_password(password, salt)

@@ -59,7 +59,7 @@ Sequel.migration do
 
     create_table :resources_tasks do
       foreign_key :resource_id, :resources
-      foreign_key :task_id, :task
+      foreign_key :task_id, :tasks
       primary_key [:resource_id, :task_id]
     end
   end

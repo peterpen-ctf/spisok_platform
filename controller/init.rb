@@ -7,10 +7,20 @@ class Controller < Ramaze::Controller
   helper :xhtml
   engine :etanni
 
+  # User helper
   helper :user
   trait :user_model => User
   
   helper :blue_form
+
+  attr_reader :current_user
+  def initialize
+    @current_user = logged_in? ? user : nil
+  end
+
+  def logged_admin?
+    logged_in? and @current_user.is_admin
+  end
 end
 
 # Here you can require all your other controllers. Note that if you have multiple

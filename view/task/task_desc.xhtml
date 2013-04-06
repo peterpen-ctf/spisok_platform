@@ -1,8 +1,21 @@
+<div>
 <?r if @task.nil? ?>
   No damn task found! 
 <?r else ?>
 <h2>#{@task.name}</h2>
 <h5>Task id: #{@task.id}</h5>
-Task description: <br>
+Task description: <br />
 #{@task.description}
 <?r end ?>
+
+
+<?r if logged_in? ?>
+  <br />
+  <br />
+  #{form_for(@task, :method => :post, :action => TaskController.r(:submit, @task.id)) do |f|
+    f.input_text('Enter answer', :answer)
+    f.input_submit('Submit')
+  end}
+<?r end ?>
+
+</div>

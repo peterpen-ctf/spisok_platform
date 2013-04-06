@@ -6,6 +6,15 @@ class TaskController < Controller
     @current_user = user
   end
 
+  # basic
+  before(:submit) do
+    if !logged_in?
+      flash[:error] = "Hey, don't forget to login!"
+      redirect r(:all)
+    end
+  end
+
+  # admin actions
   before(:new, :edit, :save, :delete) do
     if !logged_in? or !@current_user.is_admin
       flash[:error] = 'You are not an allowed to do that!'
@@ -86,7 +95,6 @@ class TaskController < Controller
       error = 'The task could not be created!'
     end
 
-
     begin
       task.update(task_data)
       flash[:success] = success
@@ -95,7 +103,25 @@ class TaskController < Controller
       flash[:error] = error
     end
     redirect r(:all)
-end
+  end
 
+
+  def submit(id)
+    redirect r(:all) unless request.post?
+    task = Task[id]
+    if task.nil?
+      flash[:error] = 'Cannot submit: invalid task!'
+      redirect r(:all)
+    end
+    valid_regex = task.answer_regex
+    given_answer = request.params['answer'].to_s
+    # TODO regexp check!
+    if valid_regex == given_answer
+      flash[:success] = 'Congrats!'
+    else
+      flash[:error] = 'Fail..'
+    end
+    redirect r(:show, task.id)
+  end
 
 end

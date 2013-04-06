@@ -27,7 +27,7 @@ class MainController < Controller
   # is silently ignored
   def notemplate
     @title = 'Welcome to Ramaze!'
-    
+
     return 'There is no \'notemplate.xhtml\' associated with this action.'
   end
 end

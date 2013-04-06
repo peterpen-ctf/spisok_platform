@@ -36,7 +36,11 @@
                     </nav>
                   </div>
               <?r if logged_in? ?>
-                <div> Logged in as: #{user.name} </div>
+                <div> Logged in as: <b>#{user.name}</b>.
+                <?r if user.is_admin ?>
+                  You are admin!
+                <?r end ?>
+                </div>
               <?r end ?>
 
                   <?r [:success, :error].each do |type| ?>

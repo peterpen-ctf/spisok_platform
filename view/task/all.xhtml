@@ -4,21 +4,19 @@
 
 <table>
   <tr>
-    <th>
-      Task id
-    </th>
-    <th>
-      Task description
-    </th>
+    <th>Task id</th>
+    <th>Task description</th>
   </tr>
 
   <?r @tasks.each do |task| ?>
   <tr>
-    <td>
-      #{task.id}
-    </td>
+    <td>#{task.id}</td>
     <td>
       #{TaskController.a(task.name, :show, task.id)}
+      <?r if logged_in? and @current_user.is_admin ?>
+        (#{TaskController.a('edit', :edit, task.id)}
+        #{TaskController.a('delete', :delete, task.id)})
+      <?r end ?>
     </td>
   </tr>
   <?r end ?>

@@ -1,0 +1,8 @@
+<div>
+#{form_for(@task, :method => :post, :action => TaskController.r(:save)) do |f|
+  f.input_hidden(:id)
+  f.input_text('Task name', :name)
+  f.textarea('Task description', :description)
+  f.input_submit(@submit_label)
+end}
+</div>

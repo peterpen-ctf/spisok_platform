@@ -1,5 +1,5 @@
-<p>Registration form</p>
-
+<div>
+  <p>Registration form</p>
 
 #{form_for(@user_form, :method => :post, :action => UserController.r(:register)) do |f|
   f.input_text('Username', :name)
@@ -8,3 +8,4 @@
   f.input_password('Confirm password', :password_confirm)
   f.input_submit('Register')
 end}
+</div>

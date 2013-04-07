@@ -13,11 +13,11 @@ class UserController < Controller
   end
 
   def index
-    redirect UserController.r(:all)
+    redirect r(:all)
   end
 
   def show(user_id = nil)
-    redirect UserController.r(:all) if user_id.nil?
+    redirect r(:all) if user_id.nil?
     user_id = user_id.to_i
     @user = User[user_id]
     if @user
@@ -38,7 +38,7 @@ class UserController < Controller
     if request.post?
       if user_login(request.subset('username', 'password'))
         flash[:success] = 'You have been logged in'
-        redirect(UserController.r(:all))
+        redirect r(:all)
       else
         flash[:error] = 'You could not be logged in'
       end 
@@ -68,7 +68,7 @@ class UserController < Controller
                              @user_form.password_confirm)
       if result[:success]
         flash[:success] = 'Account created, feel free to login below'
-        redirect(UserController.r(:login))
+        redirect r(:login)
       else
         flash[:error] = result[:errors].values.join("<br>")
       end

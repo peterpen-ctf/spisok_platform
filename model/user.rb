@@ -83,7 +83,10 @@ class User < Sequel::Model
     username = StringHelper.escapeHTML(creds['username'])
     given_password = creds['password']
     user = User.first(:name => username)
-    unless user
+    if user
+      user_encrypted_password = user.password
+      PasswordHelper.check_password?(given_password, user_encrypted_password) ? user : false
+    else
       Ramaze::Log.debug("Try to login via AD")
       ad_user = ActiveDirectoryUser.authenticate(username, given_password)
       return false unless ad_user
@@ -98,11 +101,9 @@ class User < Sequel::Model
         Ramaze::Log.debug("AD user '#{ad_user.name}' registered successfully")
         user = result[:user]
       else
-        return false
+        false
       end
     end
-    user_encrypted_password = user.password
-    PasswordHelper.check_password?(given_password, user_encrypted_password) ? user : false
   end
 
 end

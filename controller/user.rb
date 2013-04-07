@@ -1,3 +1,5 @@
+require 'ostruct'
+
 
 class UserController < Controller
   map '/user'
@@ -41,6 +43,26 @@ class UserController < Controller
     session.clear
     flash[:success] = 'You have been logged out'
     redirect(UserController.r(:all))
+  end
+
+  def register
+    if request.post?
+      @user_form = OpenStruct.new(:name => request[:name],
+                                  :full_name => request[:full_name],
+                                  :password => request[:password],
+                                  :password_confirm => request[:password_confirm])
+      result = User.register(@user_form.name,
+                             @user_form.full_name,
+                             @user_form.password,
+                             @user_form.password_confirm)
+      if result[:success]
+        flash[:success] = 'Account created, feel free to login below'
+        redirect(UserController.r(:login))
+      else
+        flash[:error] = result[:errors].values.join("<br>")
+      end
+    end
+    @title = 'Registeration'
   end
 
 end

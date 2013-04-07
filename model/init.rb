@@ -1,6 +1,14 @@
 
 DB = Sequel.sqlite(__DIR__('../db/spisokdb.sqlite'))
 
+# ActiveDirectory configuration
+AD_HOST = 'serv2.math.spbu.ru'
+AD_PORT = '636'
+AD_BASE = 'dc=math,dc=spbu,dc=ru'
+AD_DOMAIN = 'math.spbu.ru'
+AD_USE_SSL = true
+AD_TIMEOUT = 3
+
 require __DIR__('user')
 require __DIR__('contest')
 require __DIR__('category')

@@ -3,7 +3,7 @@ Sequel.migration do
   change do
     create_table :users do
       primary_key :id
-      String :name, :null => false
+      String :name, :unique => true, :null => false
       String :full_name
       TrueClass :is_admin, :default => false
       String :password, :default => '123'

@@ -2,10 +2,6 @@
 class TaskController < Controller
   map '/task'
 
-  def initialize
-    @current_user = user
-  end
-
   # basic
   before(:submit) do
     if !logged_in?
@@ -16,7 +12,7 @@ class TaskController < Controller
 
   # admin actions
   before(:new, :edit, :save, :delete) do
-    if !logged_in? or !@current_user.is_admin
+    if !logged_admin?
       flash[:error] = 'You are not an allowed to do that!'
       redirect r(:all)
     end

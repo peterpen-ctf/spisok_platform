@@ -1,6 +1,20 @@
+<div>
 <?r if @user.nil? ?>
   No damn user found! 
 <?r else ?>
 <h2>#{@user.name}</h2>
 <h5>User id: #{@user.id}</h5>
+<br />
+  <?r if @user.is_admin ?>
+    <p>This user is an <b>admin</b>!</p>
+  <?r end ?>
+
+  <?r if logged_admin? ?>
+    <?r if @user.is_admin ?>
+      #{UserController.a('[Destroy this admin!!!]', :remove_admin, @user.id)}
+    <?r else ?>
+      #{UserController.a('[Make admin]', :make_admin, @user.id)}
+    <?r end ?>
+  <?r end ?>
 <?r end ?>
+</div>

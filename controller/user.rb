@@ -4,6 +4,14 @@ require 'ostruct'
 class UserController < Controller
   map '/user'
 
+  # admin actions
+  before(:make_admin, :remove_admin) do
+    if !logged_admin?
+      flash[:error] = 'You are not an allowed to do that!'
+      redirect r(:all)
+    end
+  end
+
   def index
     redirect UserController.r(:all)
   end
@@ -25,7 +33,6 @@ class UserController < Controller
     @title = 'All users'
   end
 
-
   def login
     if request.post?
       if user_login(request.subset('username', 'password'))
@@ -39,10 +46,12 @@ class UserController < Controller
   end 
 
   def logout
-    user_logout
-    session.clear
-    flash[:success] = 'You have been logged out'
-    redirect(UserController.r(:all))
+    if logged_in?
+      user_logout
+      session.clear
+      flash[:success] = 'You have been logged out'
+    end
+    redirect r(:all)
   end
 
   def register
@@ -65,4 +74,23 @@ class UserController < Controller
     @title = 'Registeration'
   end
 
+  def make_admin(user_id)
+    user = User[user_id]
+    redirect_referrer if user.nil? or user.is_admin
+    user.update(:is_admin => true)
+    flash[:success] = 'Another superuser! Great!'
+    redirect_referrer
+  end
+
+  def remove_admin(user_id)
+    user = User[user_id]
+    redirect_referrer if user.nil? or !user.is_admin
+    if user == @current_user
+      flash[:error] = 'You cannot unadmin yourself!'
+    else
+      user.update(:is_admin => false)
+      flash[:success] = 'Hahaha! This guy sucks!'
+    end
+    redirect_referrer
+  end
 end

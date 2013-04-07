@@ -34,6 +34,7 @@ class UserController < Controller
   end
 
   def login
+    redirect r(:all) if logged_in?
     if request.post?
       if user_login(request.subset('username', 'password'))
         flash[:success] = 'You have been logged in'
@@ -55,6 +56,7 @@ class UserController < Controller
   end
 
   def register
+    redirect r(:all) if logged_in?
     if request.post?
       @user_form = OpenStruct.new(:name => request[:name],
                                   :full_name => request[:full_name],
@@ -71,7 +73,7 @@ class UserController < Controller
         flash[:error] = result[:errors].values.join("<br>")
       end
     end
-    @title = 'Registeration'
+    @title = 'Registration'
   end
 
   def make_admin(user_id)

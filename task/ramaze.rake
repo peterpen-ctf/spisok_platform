@@ -37,7 +37,9 @@ namespace :ramaze do
       :adapter => :thin,
       :port    => port,
       :file    => __FILE__,
-      :root    => Ramaze.options.roots
+      :root    => Ramaze.options.roots,
+      #:mode    => :live,
+      #:host   => '127.0.0.1',
     )
   end
 

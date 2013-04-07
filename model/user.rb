@@ -82,7 +82,7 @@ class User < Sequel::Model
   def self.authenticate(creds)
     username = StringHelper.escapeHTML(creds['username'])
     given_password = creds['password']
-    user = User.first(:name=> username)
+    user = User.first(:name => username)
     unless user
       Ramaze::Log.debug("Try to login via AD")
       ad_user = ActiveDirectoryUser.authenticate(username, given_password)

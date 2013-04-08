@@ -7,7 +7,7 @@ Sequel.migration do
     users = DB[:users]
     names = %w/llama alpaca vicugna guanaco bactrian dromedary/
     names.each do |name| 
-      users.insert(:name => name, :password => PasswordHelper.encrypt_password('123'))
+      users.insert(:name => name, :password => PasswordHelper.encrypt_password('123'), :full_name => name.capitalize + " The Camelidae")
     end
 
     users[:id=>1] = {:is_admin => true}

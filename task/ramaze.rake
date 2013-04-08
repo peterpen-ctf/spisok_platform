@@ -58,4 +58,18 @@ namespace :ramaze do
       puts "%-#{spacing}s => %s" % [from, to]
     end
   end
+
+  desc 'Runs all migrations (sqlite)'
+  task :dbup do
+    command = 'sequel -m db/migrations/ sqlite://db/spisokdb.sqlite'
+    puts "Running command:\n    #{command}"
+    puts `#{command}`
+  end
+
+  desc 'Rolls back all migrations (sqlite)'
+  task :dbdown do
+    command = 'sequel -m db/migrations/ sqlite://db/spisokdb.sqlite -M 0'
+    puts "Running command:\n    #{command}"
+    puts `#{command}`
+  end
 end

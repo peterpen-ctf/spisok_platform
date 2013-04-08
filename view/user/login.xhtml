@@ -1,9 +1,11 @@
+<div>
 <p>llama:123</p>
 
-
-#{form_for(nil, :method => :post, :action => UserController.r(:login)) do |f|
-  f.input_text('Username', :username)
-  f.input_password('Password', :password)
+#{form_for(@user, :method => :post, :action => UserController.r(:login)) do |f|
+  params = {:required => 'required'}
+  f.input_text('Username', :username, params)
+  f.input_password('Password', :password, params)
   f.input_submit('Login')
 end}
 <a href="#{UserController.r(:register)}">Register</a>
+</div>

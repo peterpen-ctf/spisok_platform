@@ -2,10 +2,11 @@
   <p>Registration form</p>
 
 #{form_for(@user_form, :method => :post, :action => UserController.r(:register)) do |f|
-  f.input_text('Username', :name)
-  f.input_text('Full name', :full_name)
-  f.input_password('Password', :password)
-  f.input_password('Confirm password', :password_confirm)
+  params = {:required => 'required'}
+  f.input_text('Username', :name, params)
+  f.input_text('Full name', :full_name, params)
+  f.input_password('Password', :password, params)
+  f.input_password('Confirm password', :password_confirm, params)
   f.input_submit('Register')
 end}
 </div>

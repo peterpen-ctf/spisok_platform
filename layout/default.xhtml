@@ -45,9 +45,10 @@
 
                   <?r [:success, :error].each do |type| ?>
                   <?r if flash[type] ?>
-                  <div class="message grid_12 #{type}">
-                    <p>#{flash[type]}</p>
-                  </div>
+                    <div class="message grid_12 #{type}">
+                      <p>#{flash[type]}</p>
+                    </div>
+                    <?r flash[type] = nil ?>
                   <?r end ?>
                   <?r end ?>
 

@@ -1,5 +1,3 @@
-require 'ostruct'
-
 
 class UserController < Controller
   map '/user'
@@ -41,6 +39,8 @@ class UserController < Controller
         redirect r(:all)
       else
         flash[:error] = 'You could not be logged in'
+        @user = Struct.new(:username, :password).new
+        @user.username = request.params['username']
       end 
     end 
     @title = 'Login'
@@ -58,10 +58,11 @@ class UserController < Controller
   def register
     redirect r(:all) if logged_in?
     if request.post?
-      @user_form = OpenStruct.new(:name => request[:name],
-                                  :full_name => request[:full_name],
-                                  :password => request[:password],
-                                  :password_confirm => request[:password_confirm])
+      @user_form = Struct.new(:name, :full_name, :password, :password_confirm).new
+      @user_form.name = request[:name]
+      @user_form.full_name = request[:full_name]
+      @user_form.password = request[:password]
+      @user_form.password_confirm = request[:password_confirm]
       result = User.register(@user_form.name,
                              @user_form.full_name,
                              @user_form.password,
@@ -71,6 +72,9 @@ class UserController < Controller
         redirect r(:login)
       else
         flash[:error] = result[:errors].values.join("<br>")
+        # clear password inputs
+        @user_form.password = ''
+        @user_form.password_confirm = ''
       end
     end
     @title = 'Registration'

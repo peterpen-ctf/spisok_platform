@@ -10,6 +10,12 @@ class Task < Sequel::Model
 
   plugin :validation_helpers
 
+  def check_answer(given_answer)
+    # TODO regexp check?
+    self.answer_regex.to_s == given_answer.to_s
+  end
+
+
   def validate
     validates_presence([:name, :description])
   end

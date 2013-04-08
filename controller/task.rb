@@ -4,7 +4,7 @@ class TaskController < Controller
 
   # basic
   before(:submit) do
-    if !logged_in?
+    unless logged_in?
       flash[:error] = "Hey, don't forget to login!"
       redirect r(:all)
     end
@@ -12,7 +12,7 @@ class TaskController < Controller
 
   # admin actions
   before(:new, :edit, :save, :delete) do
-    if !logged_admin?
+    unless logged_admin?
       flash[:error] = 'You are not an allowed to do that!'
       redirect r(:all)
     end
@@ -70,7 +70,7 @@ class TaskController < Controller
 
   def save
     redirect r(:all) unless request.post?
-    task_data = request.subset(:name, :description)
+    task_data = request.subset(:name, :description, :answer_regex)
     id = request.params['id']
 
     # Update task
@@ -109,10 +109,8 @@ class TaskController < Controller
       flash[:error] = 'Cannot submit: invalid task!'
       redirect r(:all)
     end
-    valid_regex = task.answer_regex
     given_answer = request.params['answer'].to_s
-    # TODO regexp check!
-    if valid_regex == given_answer
+    if task.check_answer(given_answer)
       flash[:success] = 'Congrats!'
     else
       flash[:error] = 'Fail..'

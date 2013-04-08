@@ -91,7 +91,7 @@ class UserController < Controller
   def remove_admin(user_id)
     user = User[user_id]
     redirect_referrer if user.nil? or !user.is_admin
-    if user == @current_user
+    if user.id == @current_user.id
       flash[:error] = 'You cannot unadmin yourself!'
     else
       user.update(:is_admin => false)

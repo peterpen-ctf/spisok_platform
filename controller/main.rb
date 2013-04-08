@@ -10,11 +10,6 @@
 # this will force the controller to be mounted on: /otherurl.
 class MainController < Controller
 
-  def initialize
-    @current_user = logged_in? ? user : nil
-  end
-
-
   # the index action is called automatically when no other action is specified
   def index
     @title = 'Main: news and stuff'

@@ -35,13 +35,13 @@ class UserController < Controller
   def login
     redirect r(:all) if logged_in?
     if request.post?
-      if user_login(request.subset('username', 'password'))
+      if user_login(request.subset('email', 'password'))
         flash[:success] = 'You have been logged in'
         redirect r(:all)
       else
         flash[:error] = 'You could not be logged in'
-        @user = Struct.new(:username, :password).new
-        @user.username = request.params['username']
+        @user = Struct.new(:email, :password).new
+        @user.email = request.params['email']
       end 
     end 
     @title = 'Login'
@@ -59,12 +59,12 @@ class UserController < Controller
   def register
     redirect r(:all) if logged_in?
     if request.post?
-      @user_form = Struct.new(:name, :full_name, :password, :password_confirm).new
-      @user_form.name = request[:name]
+      @user_form = Struct.new(:email, :full_name, :password, :password_confirm).new
+      @user_form.email = request[:email]
       @user_form.full_name = request[:full_name]
       @user_form.password = request[:password]
       @user_form.password_confirm = request[:password_confirm]
-      result = User.register(@user_form.name,
+      result = User.register(@user_form.email,
                              @user_form.full_name,
                              @user_form.password,
                              @user_form.password_confirm)

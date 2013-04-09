@@ -60,17 +60,17 @@ class User < Sequel::Model
 
   def validate
     super
-    validates_presence(:name, :message => "Username is not present")
+    validates_format(/^.+\@.+\..+$/, :email, :message => "E-mail address is not correct")
+    validates_unique(:email, :message => "E-mail '#{email}' is already registered")
     validates_presence(:full_name, :message => "Full name is not present")
-    validates_unique(:name, :message => "Username '#{name}' is already taken")
     if defined?(@new_password)
       errors.add(:password, 'Password is not present') if !@new_password || @new_password.empty?
       errors.add(:password_confirm, 'Passwords do not match') unless @new_password == @new_password_confirm
     end
   end
 
-  def self.register(name, full_name, password, password_confirm)
-    user = User.new(:name => name, :full_name => full_name)
+  def self.register(email, full_name, password, password_confirm)
+    user = User.new(:email => email, :full_name => full_name)
     user.new_password(password, password_confirm)
     begin
       user.save
@@ -78,19 +78,19 @@ class User < Sequel::Model
       Ramaze::Log.error(e)
       return {:success => false, :errors => user.errors}
     end
-    {:success => true, :user => User.first(:name => name)}
+    {:success => true, :user => User.first(:email => email)}
   end
 
   def self.authenticate(creds)
-    username = StringHelper.escapeHTML(creds['username'])
+    email = StringHelper.escapeHTML(creds['email'])
     given_password = creds['password']
-    user = User.first(:name => username)
+    user = User.first(:email => email)
     if user
       user_encrypted_password = user.password
       PasswordHelper.check_password?(given_password, user_encrypted_password) ? user : false
     else
       Ramaze::Log.debug("Try to login via AD")
-      ad_user = ActiveDirectoryUser.authenticate(username, given_password)
+      ad_user = ActiveDirectoryUser.authenticate(email, given_password)
       return false unless ad_user
       Ramaze::Log.debug("Successfully logged in via AD")
       # TODO: Save the given plaintext AD password somewhere :)

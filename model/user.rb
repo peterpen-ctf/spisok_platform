@@ -70,6 +70,8 @@ class User < Sequel::Model
   end
 
   def self.register(email, full_name, password, password_confirm)
+    email = StringHelper.escapeHTML(email)
+    full_name = StringHelper.escapeHTML(full_name)
     user = User.new(:email => email, :full_name => full_name)
     user.new_password(password, password_confirm)
     begin

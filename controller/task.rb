@@ -94,6 +94,7 @@ class TaskController < Controller
     end
 
     begin
+      task_data = StringHelper.sanitize_basic(task_data)
       task.update(task_data)
       flash[:success] = success
     rescue => e

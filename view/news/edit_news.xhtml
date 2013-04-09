@@ -1,0 +1,19 @@
+<div>
+  #{form_for(@news, :method => :post, :action => NewsController.r(:save)) do |f|
+    params = {:required => 'required'}
+    submit_label = @submit_action == :create ? 'Создать новость' : 'Обновить новость'
+    f.input_hidden(:id)
+    f.textarea('Текст новости', :content, params)
+    f.input_submit(submit_label)
+    f.input_hidden(:csrf_token, @csrf_token)
+  end}
+
+
+  #{if @submit_action == :update
+    form_for(@news, :method => :post, :action => NewsController.r(:delete)) do |f|
+      f.input_hidden(:id)
+      f.input_submit('Удалить новость', {:onClick => 'return confirm("А уверен ли?")'})
+      f.input_hidden(:csrf_token, @csrf_token)
+    end
+  end}
+</div>

@@ -1,20 +1,24 @@
+<div>
 <h2>Shpuk!</h2>
 
-<p>
-  <b>Breaking news:</b> llamas can fly!
-</p>
-<p>
-  <b>Breaking news:</b> llamas can fly!
-</p>
-<p>
-  <b>Breaking news:</b> llamas can fly!
-</p>
-<p>
-  <b>Breaking news:</b> llamas can fly!
-</p>
-<p>
-  <b>Breaking news:</b> llamas can fly!
-</p>
-<p>
-  <b>Breaking news:</b> llamas can fly!
-</p>
+<?r if logged_admin? ?>
+<p> #{NewsController.a('Создать новость', :new)} </p>
+<?r end ?>
+
+
+ <br/>
+<?r if @news.empty? ?>
+  Пока новостей нет.
+<?r else ?>
+  <?r @news.each do |n| ?>
+    #{n.content} <br/>
+    <i>#{n.update_time}</i>
+    <?r if logged_admin? ?>
+    (#{NewsController.a('править', :edit, n.id)})
+    <?r end ?>
+  <br/><br/>
+  <?r end ?>
+<?r end ?>
+
+
+</div>

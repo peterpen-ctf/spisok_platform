@@ -10,10 +10,16 @@
 #
 # this will force the controller to be mounted on: /otherurl.
 class MainController < Controller
+  map '/'
 
   # the index action is called automatically when no other action is specified
   def index
     @title = 'Main: news and stuff'
+    @news = News.all.sort {|a,b| b.update_time <=> a.update_time}
+  end
+
+  def all
+    redirect '/'
   end
 
   # the string returned at the end of the function is used as the html body
@@ -24,4 +30,5 @@ class MainController < Controller
 
     return 'There is no \'notemplate.xhtml\' associated with this action.'
   end
+
 end

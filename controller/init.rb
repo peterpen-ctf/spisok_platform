@@ -43,3 +43,4 @@ SUBMIT_WAIT_SECONDS = 5
 require __DIR__('main')
 require __DIR__('user')
 require __DIR__('task')
+require __DIR__('news')

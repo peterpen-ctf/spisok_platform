@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 #!/usr/bin/env ruby
 `sequel sqlite://db/spisokdb.sqlite -m db/migrations -M 0`
 `sequel sqlite://db/spisokdb.sqlite -m db/migrations`

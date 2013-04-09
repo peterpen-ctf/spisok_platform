@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require File.expand_path('../../app', __FILE__)
 
 # This file can be used to set various configuration options for your testing

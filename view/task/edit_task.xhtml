@@ -1,10 +1,18 @@
 <div>
 #{form_for(@task, :method => :post, :action => TaskController.r(:save)) do |f|
   params = {:required => 'required'}
+  submit_label = @submit_action == :create ? 'Create task' : 'Update task'
   f.input_hidden(:id)
   f.input_text('Task name', :name, params)
   f.textarea('Task description', :description, params)
   f.input_text('Answer', :answer_regex, params)
-  f.input_submit(@submit_label)
+  f.input_submit(submit_label, {:name => 'action_save'})
+
+  if @submit_action == :update
+    f.input_submit('Delete task', {:name => 'action_delete', :onClick => 'return confirm("Are you sure?")'})
+  end
+  f.input_hidden(:csrf_token, get_csrf_token())
 end}
+
+
 </div>

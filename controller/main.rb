@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # Default url mappings are:
 # 
 # * a controller called Main is mapped on the root of the site: /

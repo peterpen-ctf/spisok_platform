@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+# -*- encoding : utf-8 -*-
 
 require 'net/ldap'
 require 'timeout'
@@ -31,8 +31,10 @@ class ActiveDirectoryUser
         return nil unless ldap.bind
         user = ldap.search(:filter => "sAMAccountName=#{username}").first
       end
-    rescue Net::LDAP::LdapError, SystemCallError, Timeout::Error => e
-      # Handle all LDAP and network exceptions
+    # Now handle all LDAP and network exceptions
+    rescue Timeout::Error => e
+      Ramaze::Log.error("LDAP error, user '#{username}': Timeout!")
+    rescue Net::LDAP::LdapError, SystemCallError => e
       Ramaze::Log.error(e)
     end
     user ? self.new(user, password) : nil

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 
 DB = Sequel.sqlite(__DIR__('../db/spisokdb.sqlite'))
 

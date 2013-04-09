@@ -1,5 +1,8 @@
+# -*- encoding : utf-8 -*-
+
 # This file contains your application, it requires dependencies and necessary
 # parts of the application.
+
 require 'rubygems'
 require 'ramaze'
 require 'sequel'

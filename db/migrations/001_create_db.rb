@@ -1,3 +1,5 @@
+# -*- encoding : utf-8 -*-
+
 # TODO: add ':null => false' to several columns (password, is_admin etc.)
 Sequel.migration do
   change do
@@ -7,6 +9,7 @@ Sequel.migration do
       String :full_name
       TrueClass :is_admin, :default => false
       String :password, :default => '123'
+      DateTime :last_submit
     end
 
     create_table :contests do

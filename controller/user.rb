@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 
 class UserController < Controller
   map '/user'

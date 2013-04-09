@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'ramaze'
 require __DIR__('../../helper/password_helper.rb')
 

@@ -3,7 +3,8 @@
 
 #{form_for(@user_form, :method => :post, :action => UserController.r(:register)) do |f|
   params = {:required => 'required'}
-  f.input_text('Username', :name, params)
+  f.input_text('E-mail', :email, params)
+  f.g.span('необходим для подтверждения регистрации')
   f.input_text('Full name', :full_name, params)
   f.input_password('Password', :password, params)
   f.input_password('Confirm password', :password_confirm, params)

@@ -3,7 +3,7 @@
 
 #{form_for(@user, :method => :post, :action => UserController.r(:login)) do |f|
   params = {:required => 'required'}
-  f.input_text('Username', :username, params)
+  f.input_text('E-mail', :email, params)
   f.input_password('Password', :password, params)
   f.input_submit('Login')
 end}

@@ -1,7 +1,8 @@
 <table>
   <tr>
     <th> User id </th>
-    <th> User name </th>
+    <!-- TODO: remove E-mail -->
+    <th> E-mail </th>
     <th> Full name </th>
   </tr>
 
@@ -9,7 +10,7 @@
   <tr>
     <td> #{user.id} </td>
     <td>
-      <a href="#{UserController.r(:show, user.id)}">#{user.name}</a>
+      <a href="#{UserController.r(:show, user.id)}">#{user.email}</a>
       <?r if user.is_admin ?>
         (admin)
       <?r end ?>

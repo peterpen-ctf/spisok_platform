@@ -20,24 +20,24 @@
 
                     <nav class="grid_6 last">
                     <ul class="clearfix">  
-                      <li>#{MainController.a('Main', '/')} </li>
+                      <li>#{MainController.a('Главная', '/')} </li>
 
-                      <li>#{UserController.a('Users', :all)} </li>
-                      <li>#{TaskController.a('Tasks', :all)} </li>
+                      <li>#{UserController.a('Все-все', :all)} </li>
+                      <li>#{TaskController.a('Таски', :all)} </li>
 
                       <?r if logged_in? ?>
-                      <li>#{UserController.a('Logout', :logout)}</li>
+                      <li>#{UserController.a('Отпустите меня!', :logout)}</li>
                       <?r else ?>
-                      <li>#{UserController.a('Login', :login)}</li>
+                      <li>#{UserController.a('Войти', :login)}</li>
                       <?r end ?>
 
                     </ul>
                     </nav>
                   </div>
               <?r if logged_in? ?>
-                <div> Logged in as: <b>#{user.email}</b>.
+                <div> Вошел за: <b>#{user.email}</b>.
                 <?r if user.is_admin ?>
-                  You are admin!
+                  Да вы админ, батенька!
                 <?r end ?>
                 </div>
               <?r end ?>

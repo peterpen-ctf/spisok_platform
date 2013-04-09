@@ -1,19 +1,27 @@
 <div>
 <?r if @user.nil? ?>
-  No damn user found! 
+  Такой юзер не найден!
 <?r else ?>
 <h2>#{@user.email}</h2>
-<h5>User id: #{@user.id}</h5>
+<h5>id: #{@user.id}</h5>
 <br />
   <?r if @user.is_admin ?>
-    <p>This user is an <b>admin</b>!</p>
+    <p>Этот пользователь - <b>администратор</b>!</p>
   <?r end ?>
 
   <?r if logged_admin? ?>
     <?r if @user.is_admin ?>
-      #{UserController.a('[Destroy this admin!!!]', :remove_admin, @user.id)}
+    #{form_for(@user, :method => :post, :action => UserController.r(:remove_admin)) do |f|
+      f.input_hidden(:id)
+      f.input_submit('[Свергнуть этого админа!!!]', {:onClick => 'return confirm("А уверен ли?")'})
+    f.input_hidden(:csrf_token, @csrf_token)
+    end}
     <?r else ?>
-      #{UserController.a('[Make admin]', :make_admin, @user.id)}
+    #{form_for(@user, :method => :post, :action => UserController.r(:make_admin)) do |f|
+        f.input_hidden(:id)
+        f.input_submit('[Превратить в админа]', {:onClick => 'return confirm("А уверен ли?")'})
+        f.input_hidden(:csrf_token, @csrf_token)
+      end}
     <?r end ?>
   <?r end ?>
 <?r end ?>

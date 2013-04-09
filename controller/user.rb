@@ -19,6 +19,7 @@ class UserController < Controller
     redirect r(:all) if user_id.nil?
     user_id = user_id.to_i
     @user = User[user_id]
+    @csrf_token = get_csrf_token()
     if @user
       @title = 'User profile'
     else
@@ -81,22 +82,26 @@ class UserController < Controller
     @title = 'Registration'
   end
 
-  def make_admin(user_id)
+  def make_admin
+    redirect r(:all) unless request.post?
+    user_id = request.params['id']
     user = User[user_id]
     redirect_referrer if user.nil? or user.is_admin
     user.update(:is_admin => true)
-    flash[:success] = 'Another superuser! Great!'
+    flash[:success] = 'Еще один админ! Супер!'
     redirect_referrer
   end
 
-  def remove_admin(user_id)
+  def remove_admin
+    redirect r(:all) unless request.post?
+    user_id = request.params['id']
     user = User[user_id]
     redirect_referrer if user.nil? or !user.is_admin
     if user.id == @current_user.id
-      flash[:error] = 'You cannot unadmin yourself!'
+      flash[:error] = 'Не надо лишать себя всех прелестей админства!'
     else
       user.update(:is_admin => false)
-      flash[:success] = 'Hahaha! This guy sucks!'
+      flash[:success] = 'Так ему и надо!'
     end
     redirect_referrer
   end

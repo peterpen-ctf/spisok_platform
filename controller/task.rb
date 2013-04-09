@@ -6,7 +6,7 @@ class TaskController < Controller
   # basic actions
   before(:submit) do
     unless logged_in?
-      flash[:error] = "Hey, don't forget to login!"
+      flash[:error] = "Не забудьте залогиниться!"
       redirect r(:all)
     end
   end
@@ -14,15 +14,15 @@ class TaskController < Controller
   # admin actions
   before(:new, :edit, :save, :delete) do
     unless logged_admin?
-      flash[:error] = 'You are not an allowed to do that!'
+      flash[:error] = 'Вам не позволено совершать эти действия, сэр!'
       redirect r(:all)
     end
   end
 
   # csrf checks
   before_all do
-    csrf_protection :save do
-      respond("The supplied CSRF token is invalid.", 401)
+    csrf_protection(:save, :delete) do
+      respond("Намутили с CSRF токеном!", 401)
     end
   end
 
@@ -38,31 +38,34 @@ class TaskController < Controller
       # task found
       @title = @task.name
     else
-      @title = 'No task found...'
+      @title = 'Таск не найден...'
     end
     render_view :task_desc
   end
 
   def all
     @tasks = Task.all
-    @title = 'All tasks'
+    @title = 'Все таски'
   end
 
 
   def new
     @task  = Task.new
     @submit_action = :create
+    @csrf_token =  get_csrf_token()
+    @title = 'Создать самый новый таск'
     render_view :edit_task
   end
 
   def edit(id)
     @task = Task[id]
     if @task.nil?
-      flash[:error] = 'Cannot edit: invalid task!'
+      flash[:error] = 'Невозможно редактировать: неправильный таск!'
       redirect r(:all)
     end
-    @title = 'Edit task'
+    @title = 'Редактировать таск'
     @submit_action = :update
+    @csrf_token =  get_csrf_token()
     render_view :edit_task
   end
 
@@ -70,17 +73,6 @@ class TaskController < Controller
   def save
     redirect r(:all) unless request.post?
     id = request.params['id']
-
-    # FIXME dirty hack...
-    if request.params['action_delete']
-      if delete(id)
-        flash[:success] = 'OK'
-      else
-        flash[:error] = 'Cannot delete!'
-      end
-      redirect r(:all)
-    end
-
     task_data = request.subset(:name, :description, :answer_regex)
 
     # Update task
@@ -116,7 +108,7 @@ class TaskController < Controller
     redirect r(:all) unless request.post?
     task = Task[id]
     if task.nil?
-      flash[:error] = 'Cannot submit: invalid task!'
+      flash[:error] = 'Ошибка: неправильный таск!'
       redirect r(:all)
     end
 
@@ -132,22 +124,26 @@ class TaskController < Controller
 
     given_answer = request.params['answer'].to_s
     if task.check_answer(given_answer)
-      flash[:success] = 'Congrats!'
+      flash[:success] = 'Поздравляем, таск решен!'
     else
-      flash[:error] = 'Fail..'
+      flash[:error] = 'Неудача..'
     end
     redirect r(:show, task.id)
   end
 
-private
 
-  def delete(id)
+  def delete
+    redirect r(:all) unless request.post?
+    id = request.params['id']
+
     task = Task[id]
     if task.nil?
-      false
+      flash[:error] = 'Невозможно удалить таск: неправильный id'
+      redirect_referrer
     else
       task.destroy
-      true
+      flash[:success] = 'Всё окай, таск в топке'
+      redirect r(:all)
     end
   end
 

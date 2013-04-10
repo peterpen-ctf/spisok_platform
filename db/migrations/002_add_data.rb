@@ -14,8 +14,8 @@ Sequel.migration do
     users[:id=>1] = {:is_admin => true}
 
     tasks = DB[:tasks]
-    tasks.insert(:name => 'finder1', :description => 'find the key!')
-    tasks.insert(:name => 'finder2', :description => 'find the key again!')
+    tasks.insert(:name => 'finder1', :description => 'find the key!', :answer_regex => 'ans1')
+    tasks.insert(:name => 'finder2', :description => 'find the key again!', :answer_regex => 'ans2')
 
   end
 

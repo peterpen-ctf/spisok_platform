@@ -72,4 +72,7 @@ namespace :ramaze do
     puts "Running command:\n    #{command}"
     puts `#{command}`
   end
+
+  desc 'Reruns all migrations(sqlite)'
+  task :dbreset => [:dbdown, :dbup]
 end

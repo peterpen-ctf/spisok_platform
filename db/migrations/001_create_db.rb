@@ -47,10 +47,10 @@ Sequel.migration do
     end
 
     create_table :attempts do
+      primary_key :id
       foreign_key :user_id, :users
       foreign_key :task_id, :tasks
       DateTime :time
-      primary_key [:user_id, :task_id, :time]
       String :value
     end
 

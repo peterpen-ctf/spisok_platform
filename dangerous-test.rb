@@ -1,18 +1,18 @@
-# -*- encoding : utf-8 -*-
 #!/usr/bin/env ruby
+# -*- encoding : utf-8 -*-
 `sequel sqlite://db/spisokdb.sqlite -m db/migrations -M 0`
 `sequel sqlite://db/spisokdb.sqlite -m db/migrations`
 
 require_relative 'app'
 p DB
 
-user1 = User.create :name => "user1"
-user2 = User.create :name => "user2"
-user3 = User.create :name => "user3"
+user1 = User.create :email => "user1@a.r", :full_name => 'asdf'
+user2 = User.create :email => "user2@a.r", :full_name => 'asdf'
+user3 = User.create :email => "user3@a.r", :full_name => 'asdf'
 
 p User.all
 
-task1 = Task.create :name => "task1"
+task1 = Task.create :name => "task1", :description => 'find the key'
 contest1 = Contest.create :name => "contest1"
 
 contest1.organizer = user1

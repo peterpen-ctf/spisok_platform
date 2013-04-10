@@ -79,18 +79,18 @@ class TaskController < Controller
     if !id.nil? and !id.empty?
       task = Task[id]
       if task.nil?
-        flash[:error] = 'This task is invalid. WTF?'
+        flash[:error] = 'Неправильный таск. WTF?'
         redirect r(:all)
       end
 
-      success = 'The task has been updated'
-      error = 'The task could not be updated!'
+      success = 'Ура, таск обновлен!'
+      error = 'Невозможно обновить таск!'
 
     # New task
     else
       task = Task.new
-      success = 'The task has been created'
-      error = 'The task could not be created!'
+      success = 'Таск успешно создан'
+      error = 'Невозможно создать таск!'
     end
 
     begin
@@ -113,21 +113,12 @@ class TaskController < Controller
       redirect r(:all)
     end
 
-    last_submit = @current_user.last_submit
-    current = Time.now
-    @current_user.update(:last_submit => current)
-
-
-    if !last_submit.nil? and current - last_submit < SUBMIT_WAIT_SECONDS
-      flash[:error] = "Слишком частая отправка! Подождите несколько секунд."
-      redirect_referrer
-    end
-
     given_answer = request.params['answer'].to_s
-    if task.check_answer(given_answer)
+    result = @current_user.try_submit_answer(task, given_answer)
+    if result[:success]
       flash[:success] = 'Поздравляем, таск решен!'
     else
-      flash[:error] = 'Неудача..'
+      flash[:error] = result[:errors].join("<br>")
     end
     redirect r(:show, task.id)
   end

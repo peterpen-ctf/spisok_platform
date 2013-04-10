@@ -41,7 +41,6 @@ class ActiveDirectoryUser
   end
 end
 
-
 class User < Sequel::Model
   one_to_many :submitted_tasks, :class => :Task, :key => :author_id
   one_to_many :submitted_contests, :class => :Contest, :key => :organizer_id
@@ -108,6 +107,26 @@ class User < Sequel::Model
         false
       end
     end
+  end
+
+  def try_submit_answer(task, given_answer)
+    last_submit = self.last_submit
+    now = Time.now
+    self.update(:last_submit => now)
+
+    if !last_submit.nil? and now - last_submit < SUBMIT_WAIT_SECONDS
+      return {:success => false, :errors => ["Слишком частая отправка! Подождите несколько секунд."]}
+    end
+
+    Attempt.create(:value => given_answer, :user_id => self.id, :task_id => task.id,
+                   :time => now, :value => given_answer)
+
+    if task.check_answer(given_answer)
+      return true
+    else
+      return {:success => false, :errors => ["Неправильный флаг!"]}
+    end
+
   end
 
 end

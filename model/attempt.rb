@@ -3,6 +3,6 @@
 
 require 'sequel'
 class Attempt < Sequel::Model
-  many_to_one :users
-  many_to_one :tasks
+  many_to_one :user
+  many_to_one :task
 end

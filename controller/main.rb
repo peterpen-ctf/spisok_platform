@@ -18,9 +18,6 @@ class MainController < Controller
     @news = News.all.sort {|a,b| b.update_time <=> a.update_time}
   end
 
-  def all
-    redirect '/'
-  end
 
   # the string returned at the end of the function is used as the html body
   # if there is no template for the action. if there is a template, the string

@@ -27,7 +27,26 @@ class Controller < Ramaze::Controller
   def logged_admin?
     logged_in? and @current_user.is_admin
   end
+
+
+  # Custom 404 processing
+  def self.action_missing(path)
+    return if path == '/error'
+    try_resolve('/error')
+  end
+
+  # Disable default layout for error processing.
+  # Know better way?
+  set_layout '' => [:error]
+  LLAMA_DIR = 'llamas/'
+  def error
+    all_llamas = Dir.glob('public/' + LLAMA_DIR + '*')
+    @img_path = LLAMA_DIR + File.basename(all_llamas.sample)
+    render_file("#{Ramaze.options.views[0]}/error.xhtml")
+  end
+
 end
+
 
 # Damn constants
 SUBMIT_WAIT_SECONDS = 5

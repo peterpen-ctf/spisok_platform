@@ -8,7 +8,8 @@ Sequel.migration do
     users = DB[:users]
     emails = %w/llama alpaca vicugna guanaco bactrian dromedary/
     emails.each do |email| 
-      users.insert(:email => "#{email}@ya.ru", :password => PasswordHelper.encrypt_password('123'), :full_name => email + " The Camelidae")
+      users.insert(:email => email + "@ya.ru", :password => PasswordHelper.encrypt_password('123'),
+                   :full_name => email + " The Camelidae")
     end
 
     users[:id=>1] = {:is_admin => true}

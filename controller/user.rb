@@ -15,9 +15,7 @@ class UserController < Controller
     redirect r(:all)
   end
 
-  def show(user_id = nil)
-    redirect r(:all) if user_id.nil?
-    user_id = user_id.to_i
+  def show(user_id)
     @user = User[user_id]
     @csrf_token = get_csrf_token()
     if @user

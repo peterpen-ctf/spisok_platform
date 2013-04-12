@@ -30,9 +30,7 @@ class TaskController < Controller
     redirect r(:all) 
   end
 
-  def show(task_id = nil)
-    redirect r(:all) if task_id.nil?
-    task_id = task_id.to_i
+  def show(task_id)
     @task = Task[task_id]
     if @task
       # task found

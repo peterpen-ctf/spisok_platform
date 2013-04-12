@@ -4,7 +4,7 @@ class UserController < Controller
   map '/user'
 
   # admin actions
-  before(:make_admin, :remove_admin) do
+  before(:make_admin, :remove_admin, :enable, :disable) do
     if !logged_admin?
       flash[:error] = 'You are not an allowed to do that!'
       redirect r(:all)
@@ -38,11 +38,11 @@ class UserController < Controller
         flash[:success] = 'You have been logged in'
         redirect r(:all)
       else
-        flash[:error] = 'You could not be logged in'
+        flash[:error] = 'Неверные E-mail/Пароль или пользователь еще не активирован'
         @user = Struct.new(:email, :password).new
         @user.email = request.params['email']
-      end 
-    end 
+      end
+    end
     @title = 'Login'
   end 
 
@@ -80,6 +80,17 @@ class UserController < Controller
     @title = 'Registration'
   end
 
+  def confirm(user_hash)
+    register_confirm = RegisterConfirm.first(:user_hash => user_hash)
+    if !register_confirm.nil?
+      register_confirm.user.update(:is_disabled => false)
+      register_confirm.delete
+      flash[:success] = 'Регистрация пользователя успешно подтверждена!'
+      redirect r(:login)
+    end
+    redirect r(:all)
+  end
+
   def make_admin
     redirect r(:all) unless request.post?
     user_id = request.params['id']
@@ -103,4 +114,29 @@ class UserController < Controller
     end
     redirect_referrer
   end
+
+  def enable
+    redirect r(:all) unless request.post?
+    user_id = request.params['id']
+    user = User[user_id]
+    redirect_referrer if user.nil? or !user.is_disabled
+    user.update(:is_disabled => false)
+    flash[:success] = 'Пользователь врублен! Может логиниться!'
+    redirect_referrer
+  end
+
+  def disable
+    redirect r(:all) unless request.post?
+    user_id = request.params['id']
+    user = User[user_id]
+    redirect_referrer if user.nil? or user.is_disabled
+    if user.id == @current_user.id
+      flash[:error] = 'Не-не-не, не надо себя отключать!'
+    else
+      user.update(:is_disabled => true)
+      flash[:success] = 'Так ему и надо!'
+    end
+    redirect_referrer
+  end
+
 end

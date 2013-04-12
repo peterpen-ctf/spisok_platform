@@ -79,14 +79,16 @@ class User < Sequel::Model
       Ramaze::Log.error(e)
       return {:success => false, :errors => user.errors}
     end
-    {:success => true, :user => User.first(:email => email)}
+    user = User.first(:email => email)
+    user.send_register_confirm
+    {:success => true, :user => user}
   end
 
   def self.authenticate(creds)
     email = StringHelper.escapeHTML(creds['email'])
     given_password = creds['password']
     user = User.first(:email => email)
-    if user
+    if user and !user.is_disabled
       user_encrypted_password = user.password
       PasswordHelper.check_password?(given_password, user_encrypted_password) ? user : false
     else
@@ -127,6 +129,20 @@ class User < Sequel::Model
       return {:success => false, :errors => ["Неправильный флаг!"]}
     end
 
+  end
+
+  def send_mail(options)
+    options[:to] = self.email
+    EmailHelper.send(options)
+  end
+
+  def send_register_confirm
+    register_confirm = RegisterConfirm.register(self)
+    return false if register_confirm.nil?
+    confirm_link = 'http://localhost:7000/user/confirm/%s' % register_confirm.user_hash
+    send_mail(:subject => "Регистрация на SpisokCTF 2013",
+              :template => 'register_confirm.html',
+              :vars => {:confirm_link => confirm_link})
   end
 
 end

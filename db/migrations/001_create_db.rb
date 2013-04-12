@@ -7,8 +7,9 @@ Sequel.migration do
       primary_key :id
       String :email, :unique => true, :null => false
       String :full_name
-      TrueClass :is_admin, :default => false
       String :password, :default => '123'
+      TrueClass :is_admin, :default => false
+      TrueClass :is_disabled, :default => true
       DateTime :last_submit
     end
 
@@ -70,6 +71,13 @@ Sequel.migration do
       primary_key :id
       String :content, :null => false
       DateTime :update_time, :null => false
+    end
+
+    create_table :register_confirms do
+      primary_key :id
+      String :user_hash, :unique => true, :null => false
+      foreign_key :user_id, :users
+      DateTime :time
     end
   end
 end

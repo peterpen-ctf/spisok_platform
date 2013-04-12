@@ -13,6 +13,7 @@ Ramaze.options.roots = [__DIR__]
 # Load helpers
 require __DIR__('helper/string_helper')
 require __DIR__('helper/password_helper')
+require __DIR__('helper/email_helper')
 
 # Initialize models and controllers
 require __DIR__('model/init')

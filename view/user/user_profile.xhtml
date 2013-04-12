@@ -14,14 +14,27 @@
     #{form_for(@user, :method => :post, :action => UserController.r(:remove_admin)) do |f|
       f.input_hidden(:id)
       f.input_submit('[Свергнуть этого админа!!!]', {:onClick => 'return confirm("А уверен ли?")'})
-    f.input_hidden(:csrf_token, @csrf_token)
+      f.input_hidden(:csrf_token, @csrf_token)
     end}
     <?r else ?>
     #{form_for(@user, :method => :post, :action => UserController.r(:make_admin)) do |f|
-        f.input_hidden(:id)
-        f.input_submit('[Превратить в админа]', {:onClick => 'return confirm("А уверен ли?")'})
-        f.input_hidden(:csrf_token, @csrf_token)
-      end}
+      f.input_hidden(:id)
+      f.input_submit('[Превратить в админа]', {:onClick => 'return confirm("А уверен ли?")'})
+      f.input_hidden(:csrf_token, @csrf_token)
+    end}
+    <?r end ?>
+    <?r if @user.is_disabled ?>
+    #{form_for(@user, :method => :post, :action => UserController.r(:enable)) do |f|
+      f.input_hidden(:id)
+      f.input_submit('[Enable]', {:onClick => 'return confirm("А уверен ли?")'})
+      f.input_hidden(:csrf_token, @csrf_token)
+    end}
+    <?r else ?>
+    #{form_for(@user, :method => :post, :action => UserController.r(:disable)) do |f|
+      f.input_hidden(:id)
+      f.input_submit('[Disable]', {:onClick => 'return confirm("А уверен ли?")'})
+      f.input_hidden(:csrf_token, @csrf_token)
+    end}
     <?r end ?>
   <?r end ?>
 <?r end ?>

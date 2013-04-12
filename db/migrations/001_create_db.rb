@@ -40,11 +40,14 @@ Sequel.migration do
       Integer :price
     end
 
+=begin
     create_table :solutions do
       foreign_key :user_id, :users
       foreign_key :task_id, :tasks
       primary_key [:user_id, :task_id]
     end
+=end
+    create_join_table({:user_id =>:users, :task_id =>:tasks}, :name => :solutions)
 
     create_table :attempts do
       primary_key :id

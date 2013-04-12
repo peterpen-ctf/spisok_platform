@@ -46,6 +46,10 @@ class User < Sequel::Model
   one_to_many :submitted_contests, :class => :Contest, :key => :organizer_id
   one_to_many :attempts
 
+  many_to_many  :solved_tasks, :join_table => :solutions,
+                :left_key => :user_id, :right_key => :task_id,
+                :class => 'Task'
+
   plugin :validation_helpers
 
   def password=(password)
@@ -109,6 +113,10 @@ class User < Sequel::Model
     end
   end
 
+
+  # Damn constants
+  SUBMIT_WAIT_SECONDS = 5
+
   def try_submit_answer(task, given_answer)
     last_submit = self.last_submit
     now = Time.now
@@ -118,10 +126,19 @@ class User < Sequel::Model
     end
     self.update(:last_submit => now)
 
+
+    # Check if task is already solved by this user.
+    if Solution.find(:user_id => self.id, :task_id => task.id)
+      return {:success => false, :errors => ["Вы уже решили этот таск!"]}
+    end
+
     Attempt.create(:value => given_answer, :user_id => self.id, :task_id => task.id,
                    :time => now, :value => given_answer)
 
     if task.check_answer(given_answer)
+      # Add points, refresh the scoreboard.
+      # TODO Race condition!
+      add_solved_task(task)
       return {:success => true}
     else
       return {:success => false, :errors => ["Неправильный флаг!"]}

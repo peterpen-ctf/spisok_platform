@@ -3,6 +3,8 @@
 
 require 'sequel'
 class Solution < Sequel::Model
+=begin
   many_to_one :users
   many_to_one :tasks
+=end
 end

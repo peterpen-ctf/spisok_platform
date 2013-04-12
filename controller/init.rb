@@ -48,10 +48,6 @@ class Controller < Ramaze::Controller
 end
 
 
-# Damn constants
-SUBMIT_WAIT_SECONDS = 5
-
-
 # Here you can require all your other controllers. Note that if you have multiple
 # controllers you might want to do something like the following:
 #

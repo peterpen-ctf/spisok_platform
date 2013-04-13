@@ -84,7 +84,8 @@ class UserController < Controller
     register_confirm = RegisterConfirm.first(:user_hash => user_hash)
     if !register_confirm.nil?
       register_confirm.user.update(:is_disabled => false)
-      register_confirm.delete
+      register_confirm.destroy
+      Scoreboard.update_scores
       flash[:success] = 'Регистрация пользователя успешно подтверждена!'
       redirect r(:login)
     end

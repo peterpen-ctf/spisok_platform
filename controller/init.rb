@@ -45,6 +45,10 @@ class Controller < Ramaze::Controller
     render_file("#{Ramaze.options.views[0]}/error.xhtml")
   end
 
+  def get_controller_class
+    self.class
+  end
+
 end
 
 

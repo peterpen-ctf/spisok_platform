@@ -3,7 +3,7 @@ require 'pony'
 
 class EmailHelper
 
-  MAIL_TEMPLATES_DIR = 'mail_templates'
+  MAIL_TEMPLATES_DIR = 'view/mail_templates'
 
   def self.send(options)
     if options.has_key?(:template)

@@ -13,7 +13,6 @@ GEM
       treetop (~> 1.4.8)
     method_source (0.8.1)
     mime-types (1.22)
-    net-ldap (0.3.1)
     nokogiri (1.5.9)
     polyglot (0.3.3)
     pony (1.4)
@@ -44,7 +43,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  net-ldap
   pony
   pry
   rake

@@ -1,46 +1,5 @@
 # -*- encoding : utf-8 -*-
 
-require 'net/ldap'
-require 'timeout'
-
-
-class ActiveDirectoryUser
-  attr_reader :name, :password, :full_name
-
-  def initialize(entry, password)
-    @name = entry.samaccountname.first
-    @full_name = entry.displayname.first
-    @password = password
-  end
-
-  # A factory method: if a user is authenticated successfully,
-  # returns a new instance of the ActiveDirectoryUser.
-  def self.authenticate(username, password)
-    return nil if username.empty? or password.empty? or
-                  username.nil? or password.nil?
-    ldap = Net::LDAP.new(:host => AD_HOST,
-                         :port => AD_PORT,
-                         :base => AD_BASE,
-                         :auth => {:username => "#{username}@#{AD_DOMAIN}",
-                                   :password => password,
-                                   :method => :simple})
-    ldap.encryption(:simple_tls) if AD_USE_SSL
-    user = nil
-    begin
-      timeout(AD_TIMEOUT) do
-        return nil unless ldap.bind
-        user = ldap.search(:filter => "sAMAccountName=#{username}").first
-      end
-    # Now handle all LDAP and network exceptions
-    rescue Timeout::Error => e
-      Ramaze::Log.error("LDAP error, user '#{username}': Timeout!")
-    rescue Net::LDAP::LdapError, SystemCallError => e
-      Ramaze::Log.error(e)
-    end
-    user ? self.new(user, password) : nil
-  end
-end
-
 class User < Sequel::Model
   one_to_many :submitted_tasks, :class => :Task, :key => :author_id
   one_to_many :submitted_contests, :class => :Contest, :key => :organizer_id
@@ -96,22 +55,7 @@ class User < Sequel::Model
       user_encrypted_password = user.password
       PasswordHelper.check_password?(given_password, user_encrypted_password) ? user : false
     else
-      Ramaze::Log.debug("Try to login via AD")
-      ad_user = ActiveDirectoryUser.authenticate(email, given_password)
-      return false unless ad_user
-      Ramaze::Log.debug("Successfully logged in via AD")
-      # TODO: Save the given plaintext AD password somewhere :)
-      Ramaze::Log.debug("Try to register an AD user in our local database")
-      result = self.register(ad_user.name,
-                             ad_user.full_name,
-                             ad_user.password,
-                             ad_user.password)  # password confirmation
-      if result[:success]
-        Ramaze::Log.debug("AD user '#{ad_user.name}' registered successfully")
-        user = result[:user]
-      else
-        false
-      end
+      false
     end
   end
 
@@ -157,10 +101,12 @@ class User < Sequel::Model
   def send_register_confirm
     register_confirm = RegisterConfirm.register(self)
     return false if register_confirm.nil?
-    confirm_link = 'http://localhost:7000/user/confirm/%s' % register_confirm.user_hash
-    send_mail(:subject => "Регистрация на SpisokCTF 2013",
+    confirm_link = 'http://spisok2013.ppctf.net/user/confirm/%s' % register_confirm.user_hash
+    debug_confirm_link = 'http://localhost:7000/user/confirm/%s' % register_confirm.user_hash
+    send_mail(:subject => "Подтверждение регистрации на SpisokCTF 2013",
               :template => 'register_confirm.html',
-              :vars => {:confirm_link => confirm_link})
+              :vars => {:confirm_link => confirm_link,
+                        :debug_confirm_link => debug_confirm_link})
   end
 
 end

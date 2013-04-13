@@ -17,7 +17,6 @@ if tasks_summary.empty?
   usage
   exit 1
 end
-asdlkfjs
 
 app = File.expand_path('../app', __FILE__)
 require app
@@ -26,7 +25,7 @@ require 'yaml'
 
 tasks_summary.each do |task_summary|
   yaml_task = YAML.load_file(task_summary)
-  yaml_task['author'] = yaml_task['category'] = yaml_task['price'] = nil
+  yaml_task['author'] = yaml_task['category'] = nil
   Task.create(yaml_task)
 end
 

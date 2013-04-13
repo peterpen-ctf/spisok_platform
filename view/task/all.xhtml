@@ -13,7 +13,7 @@
     <td>
       #{TaskController.a(task.name, :show, task.id)}
       <?r if logged_admin? ?>
-        <a href="#{TaskController.r(:edit, task.id)}" class="label label-warning" title="править"><i class="icon-edit icon-white"></i></a>
+        <a href="#{TaskController.r(:edit, task.id)}" class="label label-warning" title="править"><i class="icon-edit icon-white"></i> править</a>
       <?r end ?>
     </td>
     <td>#{task.price}</td>

@@ -12,7 +12,7 @@
             <h3 class="muted">#{@title}</h3>
             <div class="navbar">
               <?r if logged_in? ?>
-                <div style="float:right; padding: 10px 20px 0 0"> <b>#{user.email}</b>
+                <div class="pull-right" style="padding: 10px 20px 0 0"> <b>#{user.email}</b>
                 <?r if user.is_admin ?>
                   <span class="label label-important">admin</span> 
                 <?r end ?>
@@ -21,10 +21,10 @@
               <div class="navbar-inner">
                 <div class="container">
                   <ul class="nav">
-                    <li class="active">#{MainController.a('Главная', '/')}</li>
-                    <li>#{UserController.a('Все-все', :all)}</li>
-                    <li>#{TaskController.a('Таски', :all)}</li>
-                    <li>#{MainController.a('Скорборд', :scoreboard)}</a></li>
+                    <li<?r if get_controller_class().name == "MainController" and @title != "Скорборд" ?> class="active"<?r end ?>>#{MainController.a('Главная', '/')}</li>
+                    <li<?r if get_controller_class().name == "UserController" ?> class="active"<?r end ?>>#{UserController.a('Все-все', :all)}</li>
+                    <li<?r if get_controller_class().name == "TaskController" ?> class="active"<?r end ?>>#{TaskController.a('Таски', :all)}</li>
+                    <li<?r if @title == "Скорборд" ?> class="active"<?r end ?>>#{MainController.a('Скорборд', :scoreboard)}</a></li>
                     <?r if logged_in? ?>
                     <li>#{UserController.a('Отпустите меня!', :logout)}</li>
                     <?r else ?>
@@ -50,13 +50,13 @@
           </div>
 
           <footer>
-            <p>
+            <small>
               Ramaze is free software and is licensed under the MIT license.<br />
               All textual content is licensed under a 
               <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">
                         Creative Commons license.
               </a>
-            </p>
+            </small>
           </footer>
         </div>
     <script src="http://code.jquery.com/jquery.js"></script>

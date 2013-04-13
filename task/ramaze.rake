@@ -37,7 +37,7 @@ namespace :ramaze do
       run Ramaze.core
     end
 
-    port = 8192
+    port = ARGV[1]
     puts "Starting server on port #{port}..."
     Ramaze.start(
       :adapter => :thin,

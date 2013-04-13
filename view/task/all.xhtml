@@ -8,8 +8,9 @@
     <th>Цена</th>
   </tr>
 
+  <?r if @tasks.length != 0 ?>
   <?r @tasks.each do |task| ?>
-  <tr>
+  <tr<?r if not task.is_published ?> class="warning"<?r end ?>>
     <td>
       #{TaskController.a(task.name, :show, task.id)}
       <?r if logged_admin? ?>
@@ -19,5 +20,9 @@
     <td>#{task.price}</td>
   </tr>
   <?r end ?>
-
+  <?r else ?>
+  <tr>
+    <td colspan="2">Пока нет доступных заданий</td>
+  </tr>
+  <?r end ?>
 </table>

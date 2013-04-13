@@ -32,17 +32,18 @@ class TaskController < Controller
 
   def show(task_id)
     @task = Task[task_id]
-    if @task
+    if @task and (@task.is_published or logged_admin?)
       # task found
       @title = @task.name
     else
+      @task = nil
       @title = 'Таск не найден...'
     end
     render_view :task_desc
   end
 
   def all
-    @tasks = Task.all
+    @tasks = Task.all.select { |x| x.is_published or logged_admin? }
     @title = 'Все таски'
   end
 
@@ -72,6 +73,7 @@ class TaskController < Controller
     redirect r(:all) unless request.post?
     id = request.params['id']
     task_data = request.subset(:name, :description, :answer_regex)
+    task_data[:is_published] = request[:is_published] ? true : false
 
     # Update task
     if !id.nil? and !id.empty?

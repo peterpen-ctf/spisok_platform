@@ -4,11 +4,20 @@ GEM
     coderay (1.0.9)
     daemons (1.1.9)
     eventmachine (1.0.3)
+    i18n (0.6.4)
     innate (2013.02.21)
       rack (~> 1.5.2)
+    mail (2.5.3)
+      i18n (>= 0.4.0)
+      mime-types (~> 1.16)
+      treetop (~> 1.4.8)
     method_source (0.8.1)
+    mime-types (1.22)
     net-ldap (0.3.1)
     nokogiri (1.5.9)
+    polyglot (0.3.3)
+    pony (1.4)
+      mail (> 2.0)
     pry (0.9.12)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -27,12 +36,16 @@ GEM
       daemons (>= 1.0.9)
       eventmachine (>= 0.12.6)
       rack (>= 1.0.0)
+    treetop (1.4.12)
+      polyglot
+      polyglot (>= 0.3.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   net-ldap
+  pony
   pry
   rake
   ramaze (>= 2.0.0)

@@ -50,6 +50,12 @@ Sequel.migration do
 =end
     create_join_table({:user_id =>:users, :task_id =>:tasks}, :name => :solutions)
 
+    create_table :scoreboard do
+      primary_key :id
+      foreign_key :user_id, :users, :unique => true
+      Integer :points, :null => false, :default => 0
+    end
+
     create_table :attempts do
       primary_key :id
       foreign_key :user_id, :users

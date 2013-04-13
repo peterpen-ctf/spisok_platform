@@ -134,18 +134,19 @@ class User < Sequel::Model
       return {:success => false, :errors => ["Вы уже решили этот таск!"]}
     end
 
+    # TODO Change to add_attempt or not?
     Attempt.create(:value => given_answer, :user_id => self.id, :task_id => task.id,
                    :time => now, :value => given_answer)
 
     if task.check_answer(given_answer)
       # Add points, refresh the scoreboard.
-      # TODO Race condition!
+      # TODO Race condition! But...one thread at a time????
       add_solved_task(task)
+      Scoreboard.update_scores
       return {:success => true}
     else
       return {:success => false, :errors => ["Неправильный флаг!"]}
     end
-
   end
 
   def send_mail(options)

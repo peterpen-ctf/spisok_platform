@@ -14,16 +14,17 @@
             <div id="container" class="row">
                 <!-- Top part, contains the navigation menu -->
                 <div id="top" class="grid_12">
-                    <header class="grid_6">
+                    <header class="grid_4">
                         <h1>#{@title}</h1>
                     </header> 
 
-                    <nav class="grid_6 last">
+                    <nav class="grid_8 last">
                     <ul class="clearfix">  
                       <li>#{MainController.a('Главная', '/')} </li>
 
                       <li>#{UserController.a('Все-все', :all)} </li>
                       <li>#{TaskController.a('Таски', :all)} </li>
+                      <li>#{MainController.a('Скорборд', :scoreboard)} </li>
 
                       <?r if logged_in? ?>
                       <li>#{UserController.a('Отпустите меня!', :logout)}</li>

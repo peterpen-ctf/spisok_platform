@@ -1,0 +1,15 @@
+<table>
+  <tr>
+    <th> Full name </th>
+    <th> Points </th>
+  </tr>
+
+  <?r @user_scores.each do |user_score| ?>
+  <tr>
+    <?r user = User[user_score.user_id] ?>
+    <td> #{user.full_name} </td>
+    <td> #{user_score.points} </td>
+  </tr>
+  <?r end ?>
+
+</table>

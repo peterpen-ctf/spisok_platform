@@ -19,3 +19,7 @@ require __DIR__('attempt')
 require __DIR__('resource')
 require __DIR__('news')
 require __DIR__('register_confirm')
+require __DIR__('scoreboard')
+
+# Initial scoreboard update
+Scoreboard.update_scores

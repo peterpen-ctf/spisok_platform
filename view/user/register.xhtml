@@ -1,11 +1,26 @@
 <div>
-#{form_for(@user_form, :method => :post, :action => UserController.r(:register), :class => 'form-horizontal') do |f|
-  params = {:required => 'required'}
-  f.input_text('E-mail', :email, params)
-  f.g.span('необходим для подтверждения регистрации', :class => 'help-inline')
-  f.input_text('Имя', :full_name, params)
-  f.input_password('Пароль', :password, params)
-  f.input_password('Ещё раз', :password_confirm, params)
-  f.input_submit('Регистрация', :class => 'btn btn-primary')
-end}
+  <p>Registration form</p>
+
+<form class="form-horizontal" method="post" action="#{UserController.r(:register)}">
+  <label for="form_email">E-mail</label>
+  <input required type="text" id="form_email" name="email" value="#{@user_form.email}" />
+  <span class="help-inline">необходим для подтверждения регистрации</span>
+  <br>
+
+  <label for="form_full_name">Full name</label>
+  <input required type="text" id="form_full_name" name="full_name" value="#{@user_form.full_name}" />
+  <br>
+
+  <label for="form_password">Password</label>
+  <input required type="password" id="form_password" name="password" />
+  <br>
+
+  <label for="form_password_confirm">Confirm password</label>
+  <input required type="password" id="form_password_confirm" name="password_confirm" />
+  <br>
+
+  #{@recaptcha}
+
+  <input class="btn btn-primary" type="submit" value="Register" />
+</form>
 </div>

@@ -1,7 +1,10 @@
 # -*- encoding : utf-8 -*-
+require 'rack/recaptcha'
 
 class UserController < Controller
   map '/user'
+
+  include Rack::Recaptcha::Helpers
 
   # admin actions
   before(:make_admin, :remove_admin, :enable, :disable) do
@@ -57,24 +60,24 @@ class UserController < Controller
 
   def register
     redirect r(:all) if logged_in?
+    @recaptcha = recaptcha_tag :challenge
+    @user_form = Struct.new(:email, :full_name).new
     if request.post?
-      @user_form = Struct.new(:email, :full_name, :password, :password_confirm).new
       @user_form.email = request[:email]
       @user_form.full_name = request[:full_name]
-      @user_form.password = request[:password]
-      @user_form.password_confirm = request[:password_confirm]
-      result = User.register(@user_form.email,
-                             @user_form.full_name,
-                             @user_form.password,
-                             @user_form.password_confirm)
-      if result[:success]
-        flash[:success] = 'Аккаунт создан, теперь можно зайти'
-        redirect r(:login)
+      if !recaptcha_valid?
+        flash[:error] = 'Вы робот!'
       else
-        flash[:error] = result[:errors].values.join("<br>")
-        # clear password inputs
-        @user_form.password = ''
-        @user_form.password_confirm = ''
+        result = User.register(@user_form.email,
+                               @user_form.full_name,
+                               request[:password],
+                               request[:password_confirm])
+        if result[:success]
+          flash[:success] = 'Account created, feel free to login below'
+          redirect r(:login)
+        else
+          flash[:error] = result[:errors].values.join("<br>")
+        end
       end
     end
     @title = 'Регистрация'

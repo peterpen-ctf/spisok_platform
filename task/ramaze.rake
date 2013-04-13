@@ -30,6 +30,12 @@ namespace :ramaze do
   desc 'Starts Ramaze for development'
   task :start do
     require app
+    require 'rack/recaptcha'
+
+    Ramaze.middleware :dev do
+      use Rack::Recaptcha, :public_key => '6Le-1t8SAAAAAK9tkfenGSzQVl_too0Y7Slf37Dh', :private_key => '6Le-1t8SAAAAAIHLAA8em-2q_VR0AOQF2tKiBNRS'
+      run Ramaze.core
+    end
 
     port = 8192
     puts "Starting server on port #{port}..."

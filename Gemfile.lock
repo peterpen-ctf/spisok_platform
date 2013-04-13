@@ -7,6 +7,7 @@ GEM
     i18n (0.6.4)
     innate (2013.02.21)
       rack (~> 1.5.2)
+    json (1.6.8)
     mail (2.5.3)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
@@ -22,6 +23,8 @@ GEM
       method_source (~> 0.8)
       slop (~> 3.4)
     rack (1.5.2)
+    rack-recaptcha (0.6.6)
+      json
     rake (10.0.4)
     ramaze (2012.12.08)
       innate (>= 2012.12)
@@ -45,6 +48,7 @@ PLATFORMS
 DEPENDENCIES
   pony
   pry
+  rack-recaptcha
   rake
   ramaze (>= 2.0.0)
   sanitize

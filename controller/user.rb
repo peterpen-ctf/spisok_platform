@@ -73,7 +73,7 @@ class UserController < Controller
                                request[:password],
                                request[:password_confirm])
         if result[:success]
-          flash[:success] = 'Account created, feel free to login below'
+          flash[:success] = 'Аккаунт создан, не забудьте подтвердить регистрацию!'
           redirect r(:login)
         else
           flash[:error] = result[:errors].values.join("<br>")

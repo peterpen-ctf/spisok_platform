@@ -4,7 +4,7 @@
 def usage
   puts <<-USAGE
 Usage:
-  
+
   ruby load_tasks.rb TASK_DIR
   USAGE
 end
@@ -18,7 +18,7 @@ if tasks_summary.empty?
   exit 1
 end
 
-app = File.expand_path('../app', __FILE__)
+app = File.expand_path('../../app', __FILE__)
 require app
 require 'yaml'
 

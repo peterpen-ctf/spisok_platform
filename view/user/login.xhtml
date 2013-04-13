@@ -5,8 +5,9 @@
 #{form_for(@user, :method => :post, :action => UserController.r(:login)) do |f|
   params = {:required => 'required'}
   f.input_text('E-mail', :email, params)
-  f.input_password('Password', :password, params)
-  f.input_submit('Login')
+  f.input_password('Пароль', :password, params)
+  f.g.button('Войти', :class => 'btn btn-primary', :type => 'submit')
+  f.g.text(' ')
+  f.g.a("Регистрация", :class => "btn", :href => UserController.r(:register))
 end}
-<a href="#{UserController.r(:register)}">Register</a>
 </div>

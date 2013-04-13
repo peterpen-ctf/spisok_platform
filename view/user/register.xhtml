@@ -1,13 +1,11 @@
 <div>
-  <p>Registration form</p>
-
-#{form_for(@user_form, :method => :post, :action => UserController.r(:register)) do |f|
+#{form_for(@user_form, :method => :post, :action => UserController.r(:register), :class => 'form-horizontal') do |f|
   params = {:required => 'required'}
   f.input_text('E-mail', :email, params)
-  f.g.span('необходим для подтверждения регистрации')
-  f.input_text('Full name', :full_name, params)
-  f.input_password('Password', :password, params)
-  f.input_password('Confirm password', :password_confirm, params)
-  f.input_submit('Register')
+  f.g.span('необходим для подтверждения регистрации', :class => 'help-inline')
+  f.input_text('Имя', :full_name, params)
+  f.input_password('Пароль', :password, params)
+  f.input_password('Ещё раз', :password_confirm, params)
+  f.input_submit('Регистрация', :class => 'btn btn-primary')
 end}
 </div>

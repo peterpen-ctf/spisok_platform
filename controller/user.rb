@@ -6,7 +6,7 @@ class UserController < Controller
   # admin actions
   before(:make_admin, :remove_admin, :enable, :disable) do
     if !logged_admin?
-      flash[:error] = 'You are not an allowed to do that!'
+      flash[:error] = 'Нельзя делать такого!'
       redirect r(:all)
     end
   end
@@ -19,23 +19,23 @@ class UserController < Controller
     @user = User[user_id]
     @csrf_token = get_csrf_token()
     if @user
-      @title = 'User profile'
+      @title = 'Профиль участника'
     else
-      flash[:error] = 'No such user...'
+      flash[:error] = 'Нет такого...'
     end
     render_view :user_profile
   end
 
   def all
     @users = User.all
-    @title = 'All users'
+    @title = 'Участники'
   end
 
   def login
     redirect r(:all) if logged_in?
     if request.post?
       if user_login(request.subset('email', 'password'))
-        flash[:success] = 'You have been logged in'
+        flash[:success] = 'Добро пожаловать'
         redirect r(:all)
       else
         flash[:error] = 'Неверные E-mail/Пароль или пользователь еще не активирован'
@@ -43,14 +43,14 @@ class UserController < Controller
         @user.email = request.params['email']
       end
     end
-    @title = 'Login'
+    @title = 'Вход'
   end 
 
   def logout
     if logged_in?
       user_logout
       session.clear
-      flash[:success] = 'You have been logged out'
+      flash[:success] = 'Пока-пока'
     end
     redirect r(:all)
   end
@@ -68,7 +68,7 @@ class UserController < Controller
                              @user_form.password,
                              @user_form.password_confirm)
       if result[:success]
-        flash[:success] = 'Account created, feel free to login below'
+        flash[:success] = 'Аккаунт создан, теперь можно зайти'
         redirect r(:login)
       else
         flash[:error] = result[:errors].values.join("<br>")
@@ -77,7 +77,7 @@ class UserController < Controller
         @user_form.password_confirm = ''
       end
     end
-    @title = 'Registration'
+    @title = 'Регистрация'
   end
 
   def confirm(user_hash)

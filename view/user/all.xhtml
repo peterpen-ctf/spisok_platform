@@ -1,4 +1,4 @@
-<table>
+<table class="table">
   <tr>
     <th> User id </th>
     <!-- TODO: remove E-mail -->
@@ -12,7 +12,7 @@
     <td>
       <a href="#{UserController.r(:show, user.id)}">#{user.email}</a>
       <?r if user.is_admin ?>
-        (admin)
+        <span class="label label-important">admin</span> 
       <?r end ?>
     </td>
     <td> #{user.full_name} </td>

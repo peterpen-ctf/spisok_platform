@@ -2,21 +2,21 @@
   <p> #{TaskController.a('Создать таск', :new)} </p>
 <?r end ?>
 
-<table>
+<table class="table">
   <tr>
-    <th>Task id</th>
-    <th>Task description</th>
+    <th>Описание задания</th>
+    <th>Цена</th>
   </tr>
 
   <?r @tasks.each do |task| ?>
   <tr>
-    <td>#{task.id}</td>
     <td>
       #{TaskController.a(task.name, :show, task.id)}
       <?r if logged_admin? ?>
-        (#{TaskController.a('править', :edit, task.id)})
+        <a href="#{TaskController.r(:edit, task.id)}" class="label label-warning" title="править"><i class="icon-edit icon-white"></i></a>
       <?r end ?>
     </td>
+    <td>#{task.price}</td>
   </tr>
   <?r end ?>
 

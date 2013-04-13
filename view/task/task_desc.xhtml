@@ -1,18 +1,16 @@
-<div>
+<div class="well">
 <?r if @task.nil? ?>
   Нет такого таска!
 <?r else ?>
-  <h2>#{@task.name}</h2>
-  <h5>Task id: #{@task.id}</h5>
-  Task description: <br />
-  #{@task.description}
+  <h2>#{@task.name} — #{@task.category} [#{@task.price}]</h2>
+  <p>#{@task.description}</p>
 
   <?r if logged_in? ?>
     <br />
     <br />
-    #{form_for(@task, :method => :post, :action => TaskController.r(:submit, @task.id)) do |f|
-      f.input_text('Enter answer', :answer)
-      f.input_submit('Submit')
+    #{form_for(@task, :method => :post, :action => TaskController.r(:submit, @task.id), :class => 'form') do |f|
+      f.input_text('Ответ', :answer)
+      f.g.button('Отправить', :class => 'btn btn-primary', :type => 'submit')
     end}
   <?r end ?>
 <?r end ?>

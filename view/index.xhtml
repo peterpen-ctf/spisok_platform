@@ -1,22 +1,21 @@
 <div>
-<h2>Shpuk!</h2>
 
 <?r if logged_admin? ?>
-<p> #{NewsController.a('Создать новость', :new)} </p>
+<p class="right"> <a href="#NewsController.r(:new)}" class="btn btn-inverse"><i class="icon-plus icon-white"></i> Создать новость</a></p>
 <?r end ?>
 
-
- <br/>
 <?r if @news.empty? ?>
   Пока новостей нет.
 <?r else ?>
   <?r @news.each do |n| ?>
-    #{n.content} <br/>
-    <i>#{n.update_time}</i>
+    <div class="news-entry">
+    <p>#{n.content}</p>
+    <span class="label">#{n.update_time}</span>
     <?r if logged_admin? ?>
-    (#{NewsController.a('править', :edit, n.id)})
+     <a href="#{NewsController.r(:edit, n.id )}" class="label label-important">править</a>
     <?r end ?>
-  <br/><br/>
+  </div>
+  <hr/>
   <?r end ?>
 <?r end ?>
 

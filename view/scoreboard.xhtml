@@ -1,15 +1,17 @@
-<table>
+<table class="table">
   <tr>
-    <th> Full name </th>
-    <th> Points </th>
+    <th> Имя </th>
+    <th> Очки </th>
   </tr>
 
   <?r @user_scores.each do |user_score| ?>
+  <?r cuser = User[user_score.user_id] ?>
+  <?r if not (cuser.is_admin or cuser.is_disabled) ?>
   <tr>
-    <?r user = User[user_score.user_id] ?>
-    <td> #{user.full_name} </td>
+    <td> #{cuser.full_name} <?r if user.email == cuser.email ?><span class="label label-info">Вы</span><?r end ?> </td>
     <td> #{user_score.points} </td>
   </tr>
+  <?r end ?>
   <?r end ?>
 
 </table>

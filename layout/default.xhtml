@@ -4,68 +4,62 @@
         <meta charset="utf-8" />
 
         <title>#{@title}</title>
-        #{css('reset')}
-        #{css('grid')}
-        #{css('layout')}
-        #{css('text')}
+        <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
     </head>
     <body>
         <div class="container">
-            <div id="container" class="row">
-                <!-- Top part, contains the navigation menu -->
-                <div id="top" class="grid_12">
-                    <header class="grid_4">
-                        <h1>#{@title}</h1>
-                    </header> 
-
-                    <nav class="grid_8 last">
-                    <ul class="clearfix">  
-                      <li>#{MainController.a('Главная', '/')} </li>
-
-                      <li>#{UserController.a('Все-все', :all)} </li>
-                      <li>#{TaskController.a('Таски', :all)} </li>
-                      <li>#{MainController.a('Скорборд', :scoreboard)} </li>
-
-                      <?r if logged_in? ?>
-                      <li>#{UserController.a('Отпустите меня!', :logout)}</li>
-                      <?r else ?>
-                      <li>#{UserController.a('Войти', :login)}</li>
-                      <?r end ?>
-
-                    </ul>
-                    </nav>
-                  </div>
+          <div class="masthead">
+            <h3 class="muted">#{@title}</h3>
+            <div class="navbar">
               <?r if logged_in? ?>
-                <div> Вошел за: <b>#{user.email}</b>.
+                <div style="float:right; padding: 10px 20px 0 0"> <b>#{user.email}</b>
                 <?r if user.is_admin ?>
-                  Да вы админ, батенька!
+                  <span class="label label-important">admin</span> 
                 <?r end ?>
                 </div>
               <?r end ?>
-
-                  <?r [:success, :error].each do |type| ?>
-                  <?r if flash[type] ?>
-                    <div class="message grid_12 #{type}">
-                      <p>#{flash[type]}</p>
-                    </div>
-                    <?r flash[type] = nil ?>
-                  <?r end ?>
-                  <?r end ?>
-
-                <div id="content" class="grid_12">
-                    #{@content}
+              <div class="navbar-inner">
+                <div class="container">
+                  <ul class="nav">
+                    <li class="active">#{MainController.a('Главная', '/')}</li>
+                    <li>#{UserController.a('Все-все', :all)}</li>
+                    <li>#{TaskController.a('Таски', :all)}</li>
+                    <li>#{MainController.a('Скорборд', :scoreboard)}</a></li>
+                    <?r if logged_in? ?>
+                    <li>#{UserController.a('Отпустите меня!', :logout)}</li>
+                    <?r else ?>
+                    <li>#{UserController.a('Войти', :login)}</li>
+                    <?r end ?>
+                  </ul>
                 </div>
-            </div>
+              </div>
+            </div><!-- /.navbar -->
+          </div>
 
-            <footer id="footer">
-                <p>
-                    Ramaze is free software and is licensed under the MIT license.<br />
-                    All textual content is licensed under a 
-                    <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+          <?r [:success, :error].each do |type| ?>
+          <?r if flash[type] ?>
+            <div class="alert alert-#{type}">
+              <p>#{flash[type]}</p>
+            </div>
+            <?r flash[type] = nil ?>
+          <?r end ?>
+          <?r end ?>
+
+          <div id="content">
+            #{@content}
+          </div>
+
+          <footer>
+            <p>
+              Ramaze is free software and is licensed under the MIT license.<br />
+              All textual content is licensed under a 
+              <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">
                         Creative Commons license.
-                    </a>
-                </p>
-            </footer>
+              </a>
+            </p>
+          </footer>
         </div>
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
     </body>
 </html>

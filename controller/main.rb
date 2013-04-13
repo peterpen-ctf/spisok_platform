@@ -14,12 +14,12 @@ class MainController < Controller
 
   # the index action is called automatically when no other action is specified
   def index
-    @title = 'Main: news and stuff'
+    @title = 'SpisokCTF: новости'
     @news = News.all.sort {|a,b| b.update_time <=> a.update_time}
   end
 
   def scoreboard
-    @title = 'Scoreboard'
+    @title = 'Скорборд'
     @user_scores = Scoreboard.all.sort {|a,b| b.points <=> a.points}
   end
 

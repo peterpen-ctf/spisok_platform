@@ -101,10 +101,12 @@ class User < Sequel::Model
   def send_register_confirm
     register_confirm = RegisterConfirm.register(self)
     return false if register_confirm.nil?
-    confirm_link = 'http://localhost:7000/user/confirm/%s' % register_confirm.user_hash
-    send_mail(:subject => "Регистрация на SpisokCTF 2013",
+    confirm_link = 'http://spisok2013.ppctf.net/user/confirm/%s' % register_confirm.user_hash
+    debug_confirm_link = 'http://localhost:7000/user/confirm/%s' % register_confirm.user_hash
+    send_mail(:subject => "Подтверждение регистрации на SpisokCTF 2013",
               :template => 'register_confirm.html',
-              :vars => {:confirm_link => confirm_link})
+              :vars => {:confirm_link => confirm_link,
+                        :debug_confirm_link => debug_confirm_link})
   end
 
 end

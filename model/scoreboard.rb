@@ -6,9 +6,16 @@ class Scoreboard < Sequel::Model(:scoreboard)
   def self.update_scores
     users = User.all
     users.each do |user|
-      next if user.is_disabled
       user_id = user.id
-      user_score = Scoreboard[user_id]
+
+      # Make sure that disabled user is not in a scoreboard
+      if user.is_disabled
+        user_score = Scoreboard.first :user_id => user_id
+        user_score.destroy unless user_score.nil?
+        next
+      end
+
+      user_score = Scoreboard.first :user_id => user_id
       if user_score.nil?
         user_score = Scoreboard.new :user_id => user_id
         user_score.save

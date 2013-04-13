@@ -4,10 +4,10 @@ class TaskController < Controller
   map '/task'
 
   # basic actions
-  before(:submit) do
+  before(:submit, :show, :all) do
     unless logged_in?
       flash[:error] = "Не забудьте залогиниться!"
-      redirect r(:all)
+      redirect UserController.r(:login)
     end
   end
 
@@ -22,7 +22,7 @@ class TaskController < Controller
   # csrf checks
   before_all do
     csrf_protection(:save, :delete) do
-      respond("Намутили с CSRF токеном!", 401)
+      respond("CSRF token error!", 401)
     end
   end
 

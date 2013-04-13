@@ -14,7 +14,7 @@ class NewsController < Controller
   # csrf checks
   before_all do
     csrf_protection(:save, :delete) do
-      respond("Намутили с CSRF токеном!", 401)
+      respond("CSRF token error!", 401)
     end
   end
 

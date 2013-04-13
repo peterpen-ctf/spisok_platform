@@ -14,6 +14,13 @@ class UserController < Controller
     end
   end
 
+  # csrf checks
+  before_all do
+    csrf_protection(:make_admin, :remove_admin, :enable, :disable) do
+      respond("CSRF token error!", 401)
+    end
+  end
+
   def index
     redirect r(:all)
   end
@@ -39,7 +46,7 @@ class UserController < Controller
     if request.post?
       if user_login(request.subset('email', 'password'))
         flash[:success] = 'Добро пожаловать'
-        redirect r(:all)
+        redirect MainController.r(:scoreboard)
       else
         flash[:error] = 'Неверные E-mail/Пароль или пользователь еще не активирован'
         @user = Struct.new(:email, :password).new
@@ -88,8 +95,8 @@ class UserController < Controller
     if !register_confirm.nil?
       register_confirm.user.update(:is_disabled => false)
       register_confirm.destroy
-      Scoreboard.update_scores
       flash[:success] = 'Регистрация пользователя успешно подтверждена!'
+      Scoreboard.update_scores
       redirect r(:login)
     end
     redirect r(:all)
@@ -102,6 +109,7 @@ class UserController < Controller
     redirect_referrer if user.nil? or user.is_admin
     user.update(:is_admin => true)
     flash[:success] = 'Еще один админ! Супер!'
+    Scoreboard.update_scores
     redirect_referrer
   end
 
@@ -115,6 +123,7 @@ class UserController < Controller
     else
       user.update(:is_admin => false)
       flash[:success] = 'Так ему и надо!'
+      Scoreboard.update_scores
     end
     redirect_referrer
   end
@@ -126,6 +135,7 @@ class UserController < Controller
     redirect_referrer if user.nil? or !user.is_disabled
     user.update(:is_disabled => false)
     flash[:success] = 'Пользователь врублен! Может логиниться!'
+    Scoreboard.update_scores
     redirect_referrer
   end
 
@@ -139,6 +149,7 @@ class UserController < Controller
     else
       user.update(:is_disabled => true)
       flash[:success] = 'Так ему и надо!'
+      Scoreboard.update_scores
     end
     redirect_referrer
   end

@@ -27,7 +27,7 @@ class TaskController < Controller
   end
 
   def index
-    redirect r(:all) 
+    redirect r(:all)
   end
 
   def show(task_id)

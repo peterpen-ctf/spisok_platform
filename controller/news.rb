@@ -85,7 +85,7 @@ class NewsController < Controller
 
     news = News[id]
     if news.nil?
-      flash[:error] = 'Невозможно удалить новост: неправильный id'
+      flash[:error] = 'Невозможно удалить новость: неправильный id'
       redirect_referrer
     else
       news.destroy

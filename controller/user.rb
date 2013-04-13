@@ -54,7 +54,7 @@ class UserController < Controller
       end
     end
     @title = 'Вход'
-  end 
+  end
 
   def logout
     if logged_in?

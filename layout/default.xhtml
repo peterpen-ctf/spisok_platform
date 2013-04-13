@@ -22,7 +22,7 @@
                 <div class="container">
                   <ul class="nav">
                     <li<?r if get_controller_class().name == "MainController" and @title != "Скорборд" ?> class="active"<?r end ?>>#{MainController.a('Главная', '/')}</li>
-                    <li<?r if get_controller_class().name == "UserController" and @title == 'Все-все' ?> class="active"<?r end ?>>#{UserController.a('Все-все', :all)}</li>
+                    <li<?r if get_controller_class().name == "UserController" and @title == 'Участники' ?> class="active"<?r end ?>>#{UserController.a('Все-все', :all)}</li>
                     <li<?r if get_controller_class().name == "TaskController" ?> class="active"<?r end ?>>#{TaskController.a('Таски', :all)}</li>
                     <li<?r if @title == "Скорборд" ?> class="active"<?r end ?>>#{MainController.a('Скорборд', :scoreboard)}</a></li>
                     <?r if logged_in? ?>

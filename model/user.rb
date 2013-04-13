@@ -22,12 +22,12 @@ class User < Sequel::Model
 
   def validate
     super
-    validates_format(/^.+\@.+\..+$/, :email, :message => "E-mail address is not correct")
-    validates_unique(:email, :message => "E-mail '#{email}' is already registered")
-    validates_presence(:full_name, :message => "Full name is not present")
+    validates_format(/^.+\@.+\..+$/, :email, :message => "Неправльный адрес email!")
+    validates_unique(:email, :message => "Email '#{email}' уже зарегистрирован!")
+    validates_presence(:full_name, :message => "Не указано полное имя!")
     if defined?(@new_password)
-      errors.add(:password, 'Password is not present') if !@new_password || @new_password.empty?
-      errors.add(:password_confirm, 'Passwords do not match') unless @new_password == @new_password_confirm
+      errors.add(:password, 'Не указан пароль') if !@new_password || @new_password.empty?
+      errors.add(:password_confirm, 'Пароли не совпадают') unless @new_password == @new_password_confirm
     end
   end
 

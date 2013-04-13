@@ -18,6 +18,10 @@ class MainController < Controller
     @news = News.all.sort {|a,b| b.update_time <=> a.update_time}
   end
 
+  def scoreboard
+    @title = 'Scoreboard'
+    @user_scores = Scoreboard.all.sort {|a,b| b.points <=> a.points}
+  end
 
   # the string returned at the end of the function is used as the html body
   # if there is no template for the action. if there is a template, the string
@@ -27,5 +31,4 @@ class MainController < Controller
 
     return 'There is no \'notemplate.xhtml\' associated with this action.'
   end
-
 end

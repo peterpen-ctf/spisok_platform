@@ -31,7 +31,7 @@ namespace :ramaze do
   task :start do
     require app
 
-    port = 8192
+    port = ARGV[1]
     puts "Starting server on port #{port}..."
     Ramaze.start(
       :adapter => :thin,

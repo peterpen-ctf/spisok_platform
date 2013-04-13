@@ -39,6 +39,7 @@ class TaskController < Controller
       @task = nil
       @title = 'Таск не найден...'
     end
+    @is_task_solved = @current_user.solved_tasks.include? @task
     render_view :task_desc
   end
 

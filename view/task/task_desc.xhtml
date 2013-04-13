@@ -7,11 +7,15 @@
 
   <?r if logged_in? ?>
     <br />
-    <br />
+    <hr />
+    <?r if @is_task_solved ?>
+    <p><i>Вы уже решили это задание!</i></p>
+    <?r else ?>
     #{form_for(@task, :method => :post, :action => TaskController.r(:submit, @task.id), :class => 'form') do |f|
       f.input_text('Ответ', :answer)
       f.g.button('Отправить', :class => 'btn btn-primary', :type => 'submit')
     end}
+    <?r end ?>
   <?r end ?>
 <?r end ?>
 </div>

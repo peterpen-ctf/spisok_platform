@@ -10,6 +10,7 @@ Usage:
 end
 
 path = ARGV[0] || ''
+env  = ARGV[1] || 'prod'
 
 tasks_summary = Dir.glob(path + '/*/summary.yml')
 if tasks_summary.empty?
@@ -26,6 +27,7 @@ require 'yaml'
 tasks_summary.each do |task_summary|
   yaml_task = YAML.load_file(task_summary)
   yaml_task['author'] = yaml_task['category'] = nil
+  yaml_task['is_published'] = env  == 'dev' ? 1 : 0
   Task.create(yaml_task)
 end
 

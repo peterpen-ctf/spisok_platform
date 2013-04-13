@@ -8,7 +8,7 @@ Sequel.migration do
     # Add users
     users = DB[:users]
     emails = %w/llama alpaca vicugna guanaco bactrian dromedary/
-    emails.each do |email| 
+    emails.each do |email|
       users.insert(:email => email + "@ya.ru", :password => PasswordHelper.encrypt_password('123'),
                    :full_name => email + " The Camelidae", :is_disabled => false)
     end

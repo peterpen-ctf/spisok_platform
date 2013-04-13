@@ -3,7 +3,7 @@ require 'sanitize'
 
 class StringHelper
 
-  HTML_ESCAPE_TABLE = { 
+  HTML_ESCAPE_TABLE = {
     '&' => '&amp;',
     '"' => '&quot;',
     '<' => '&lt;',

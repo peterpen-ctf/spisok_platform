@@ -5,7 +5,7 @@
   f.input_hidden(:id)
   f.input_text('Название таска', :name, params)
   f.textarea('Описание таска', :description, params)
-  f.input_checkbox("Опубликован", :is_published, {:checked => ""})
+  f.input_checkbox("Опубликован", :is_published, checked=(@task.is_published ? @task.is_published : nil), {:show_value => false})
   f.input_text('Ответ', :answer_regex, params)
   f.input_submit(submit_label, {:class => 'btn btn-primary'})
   f.input_hidden(:csrf_token, @csrf_token)

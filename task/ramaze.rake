@@ -33,6 +33,15 @@ namespace :ramaze do
     require 'rack/recaptcha'
 
     Ramaze.middleware :dev do
+      use Rack::Lint
+      use Rack::CommonLogger, Ramaze::Log
+      use Rack::ShowExceptions
+      use Rack::ShowStatus
+      use Rack::RouteExceptions
+      use Rack::ConditionalGet
+      use Rack::ETag, 'public'
+      use Rack::Head
+      use Ramaze::Reloader
       use Rack::Recaptcha, :public_key => '6Le-1t8SAAAAAK9tkfenGSzQVl_too0Y7Slf37Dh', :private_key => '6Le-1t8SAAAAAIHLAA8em-2q_VR0AOQF2tKiBNRS'
       run Ramaze.core
     end

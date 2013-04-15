@@ -9,13 +9,14 @@
   Пока новостей нет.
 <?r else ?>
   <?r @news.each do |n| ?>
-    <div class="news-entry">
+    <div class="news-entry well">
+    <div class="pull-right">
+      <span class="label" title="#{n.update_time}">#{n.update_time.strftime("%R %d.%m")}</span>
+      <?r if logged_admin? ?>
+        <a href="#{NewsController.r(:edit, n.id )}" class="label label-important">править</a>
+      <?r end ?>
+    </div>
     <p>#{n.content}</p>
-    <span class="label">#{n.update_time}</span>
-    <?r if logged_admin? ?>
-     <a href="#{NewsController.r(:edit, n.id )}" class="label label-important">править</a>
-    <?r end ?>
   </div>
-  <hr/>
   <?r end ?>
 <?r end ?>

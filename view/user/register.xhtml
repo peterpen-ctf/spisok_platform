@@ -1,26 +1,36 @@
 <div>
-  <p>Registration form</p>
-
 <form class="form-horizontal" method="post" action="#{UserController.r(:register)}">
-  <label for="form_email">E-mail</label>
-  <input required type="text" id="form_email" name="email" value="#{@user_form.email}" />
-  <span class="help-inline">необходим для подтверждения регистрации</span>
-  <br>
-
-  <label for="form_full_name">Full name</label>
-  <input required type="text" id="form_full_name" name="full_name" value="#{@user_form.full_name}" />
-  <br>
-
-  <label for="form_password">Password</label>
-  <input required type="password" id="form_password" name="password" />
-  <br>
-
-  <label for="form_password_confirm">Confirm password</label>
-  <input required type="password" id="form_password_confirm" name="password_confirm" />
-  <br>
-
-  #{@recaptcha}
-
-  <input class="btn btn-primary" type="submit" value="Register" />
+  <div class="control-group">
+    <label class="control-label" for="inputEmail">Email</label>
+    <div class="controls">
+      <input type="text" id="inputEmail" name="email" value="#{@user_form.email}">
+      <span class="help-inline">необходим для подтверждения регистрации</span>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="inputName">Имя, Фамилия</label>
+    <div class="controls">
+      <input type="text" id="inputName" name="full_name" value="#{@user_form.full_name}">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="inputPassword">Пароль</label>
+    <div class="controls">
+      <input type="password" id="inputPassword" name="password">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="inputPasswordConfirm">Ещё раз</label>
+    <div class="controls">
+      <input type="password" id="inputPasswordConfirm" name="password_confirm">
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      #{@recaptcha}
+      <button type="submit" class="btn btn-primary">Поехали</button>
+    </div>
+  </div>
 </form>
+
 </div>

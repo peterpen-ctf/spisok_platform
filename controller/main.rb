@@ -14,7 +14,7 @@ class MainController < Controller
 
   # the index action is called automatically when no other action is specified
   def index
-    @title = 'SpisokCTF: новости'
+    @title = 'Новости'
     @news = News.all.sort {|a,b| b.update_time <=> a.update_time}
   end
 

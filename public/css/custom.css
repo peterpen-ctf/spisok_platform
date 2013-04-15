@@ -9,6 +9,16 @@ body {
 	padding-bottom:30px;
 }
 
+#page-name {margin-left:20px; font-weight:400; color:#555}
+#logo {margin:0 20px 0 0; font-weight:400}
+
+#logo-spisok {color: #802C59;}
+#logo-ctf {
+    background-color: #105D88;
+    color: white;
+    padding: 5px 10px 5px 5px;
+}
+
 footer
 {
 	display: block;

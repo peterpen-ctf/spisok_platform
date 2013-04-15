@@ -3,26 +3,27 @@
   <div class="control-group">
     <label class="control-label" for="inputEmail">Email</label>
     <div class="controls">
-      <input type="text" id="inputEmail" name="email" value="#{@user_form.email}">
+      <input type="text" id="inputEmail" name="email" value="#{@user_form.email}" required>
       <span class="help-inline">необходим для подтверждения регистрации</span>
     </div>
   </div>
   <div class="control-group">
     <label class="control-label" for="inputName">Имя, Фамилия</label>
     <div class="controls">
-      <input type="text" id="inputName" name="full_name" value="#{@user_form.full_name}">
+      <input type="text" id="inputName" name="full_name" value="#{@user_form.full_name}" required>
+      <span class="help-inline">указывайте, пожалуйста, реальные имя-фамилию на английском или русском. В противном случае вы не сможете претендовать на получение призов.</span>
     </div>
   </div>
   <div class="control-group">
     <label class="control-label" for="inputPassword">Пароль</label>
     <div class="controls">
-      <input type="password" id="inputPassword" name="password">
+      <input type="password" id="inputPassword" name="password" required>
     </div>
   </div>
   <div class="control-group">
     <label class="control-label" for="inputPasswordConfirm">Ещё раз</label>
     <div class="controls">
-      <input type="password" id="inputPasswordConfirm" name="password_confirm">
+      <input type="password" id="inputPasswordConfirm" name="password_confirm" required>
     </div>
   </div>
   <div class="control-group">

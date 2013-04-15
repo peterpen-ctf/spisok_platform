@@ -7,10 +7,10 @@ class UserController < Controller
   include Rack::Recaptcha::Helpers
 
   # admin actions
-  before(:make_admin, :remove_admin, :enable, :disable) do
+  before(:make_admin, :remove_admin, :enable, :disable, :all) do
     if !logged_admin?
       flash[:error] = 'Нельзя делать такого!'
-      redirect r(:all)
+      redirect '/'
     end
   end
 
@@ -22,7 +22,7 @@ class UserController < Controller
   end
 
   def index
-    redirect r(:all)
+    redirect '/'
   end
 
   def show(user_id)
@@ -42,7 +42,7 @@ class UserController < Controller
   end
 
   def login
-    redirect r(:all) if logged_in?
+    redirect '/' if logged_in?
     if request.post?
       if user_login(request.subset('email', 'password'))
         flash[:success] = 'Добро пожаловать'
@@ -62,11 +62,11 @@ class UserController < Controller
       session.clear
       flash[:success] = 'Пока-пока'
     end
-    redirect r(:all)
+    redirect MainController.r(:scoreboard)
   end
 
   def register
-    redirect r(:all) if logged_in?
+    redirect '/' if logged_in?
     @recaptcha = recaptcha_tag :challenge
     @user_form = Struct.new(:email, :full_name).new
     if request.post?
@@ -99,11 +99,11 @@ class UserController < Controller
       Scoreboard.update_scores
       redirect r(:login)
     end
-    redirect r(:all)
+    redirect '/'
   end
 
   def make_admin
-    redirect r(:all) unless request.post?
+    redirect MainController.r(:index) unless request.post?
     user_id = request.params['id']
     user = User[user_id]
     redirect_referrer if user.nil? or user.is_admin
@@ -114,7 +114,7 @@ class UserController < Controller
   end
 
   def remove_admin
-    redirect r(:all) unless request.post?
+    redirect '/' unless request.post?
     user_id = request.params['id']
     user = User[user_id]
     redirect_referrer if user.nil? or !user.is_admin
@@ -129,7 +129,7 @@ class UserController < Controller
   end
 
   def enable
-    redirect r(:all) unless request.post?
+    redirect '/' unless request.post?
     user_id = request.params['id']
     user = User[user_id]
     redirect_referrer if user.nil? or !user.is_disabled
@@ -140,7 +140,7 @@ class UserController < Controller
   end
 
   def disable
-    redirect r(:all) unless request.post?
+    redirect '/' unless request.post?
     user_id = request.params['id']
     user = User[user_id]
     redirect_referrer if user.nil? or user.is_disabled

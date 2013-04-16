@@ -73,7 +73,7 @@ class TaskController < Controller
   def save
     redirect r(:all) unless request.post?
     id = request.params['id']
-    task_data = request.subset(:name, :description, :answer_regex)
+    task_data = request.subset(:name, :description, :answer_regex, :price)
     task_data[:is_published] = request[:is_published] ? true : false
 
     # Update task
@@ -98,11 +98,12 @@ class TaskController < Controller
       task_data = StringHelper.sanitize_basic(task_data)
       task.update(task_data)
       flash[:success] = success
+      redirect r(:all)
     rescue => e
       Ramaze::Log.error(e)
       flash[:error] = error
+      redirect_referrer
     end
-    redirect r(:all)
   end
 
 

@@ -3,7 +3,7 @@
     params = {:required => 'required'}
     submit_label = @submit_action == :create ? 'Создать новость' : 'Обновить новость'
     f.input_hidden(:id)
-    f.textarea('Текст новости', :content, params)
+    f.textarea('Текст новости', :content, params.merge(:style => 'width: 800px; height: 300px'))
     f.input_submit(submit_label)
     f.input_hidden(:csrf_token, @csrf_token)
   end}

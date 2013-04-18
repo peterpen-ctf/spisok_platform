@@ -11,6 +11,7 @@ body {
 
 #page-name {margin-left:20px; font-weight:400; color:#555}
 #logo {margin:0 20px 0 0; font-weight:400}
+#logo a:hover {text-decoration: none}
 
 #logo-spisok {color: #802C59;}
 #logo-ctf {

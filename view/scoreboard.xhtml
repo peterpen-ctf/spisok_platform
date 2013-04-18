@@ -1,12 +1,14 @@
 <table class="table">
   <tr>
+    <th></th>
     <th> Имя </th>
     <th> Очки </th>
   </tr>
 
-  <?r @user_scores.each do |user_score| ?>
+  <?r @user_scores.each_with_index do |user_score, i| ?>
   <?r cuser = User[user_score.user_id] ?>
   <tr>
+    <td style="width: 20px;"> #{i+1} </td>
     <td> #{cuser.full_name} <?r if user.email == cuser.email ?><span class="label label-info">Вы</span><?r end ?> </td>
     <td> #{user_score.points} </td>
   </tr>

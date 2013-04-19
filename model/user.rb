@@ -38,13 +38,12 @@ class User < Sequel::Model
     user.new_password(password, password_confirm)
     begin
       user.save
+      user.send_register_confirm
+      {:success => true, :user => user}
     rescue => e
       Ramaze::Log.error(e)
       return {:success => false, :errors => user.errors}
     end
-    user = User.first(:email => email)
-    user.send_register_confirm
-    {:success => true, :user => user}
   end
 
   def self.authenticate(creds)

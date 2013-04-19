@@ -2,39 +2,38 @@
 <?r if @user.nil? ?>
   Такой юзер не найден!
 <?r else ?>
-<h2>#{@user.email}</h2>
-<h5>id: #{@user.id}</h5>
+  <h2>Профиль пользователя</h2>
+  <dl class="dl-horizontal">
+    <dt>ID</dt>
+    <dd>#{@user.id}</dd>
+    <dt>Полное имя</dt>
+    <dd>#{@user.full_name}</dd>
+    <dt>E-mail</dt>
+    <dd>#{@user.email}</dd>
+    <dt>Откуда</dt>
+    <dd>#{}</dd>
+  </dl>
 <br />
   <?r if @user.is_admin ?>
     <p>Этот пользователь - <b>администратор</b>!</p>
   <?r end ?>
-
   <?r if logged_admin? ?>
+    #{def user_form(action, btn_value, btn_class)
+        form_for(@user, :method => :post, :action => UserController.r(action)) do |f|
+        f.input_hidden(:id)
+        f.input_submit(btn_value, {:class => 'btn ' + btn_class, :onClick => 'return confirm("А уверен ли?")'})
+        f.input_hidden(:csrf_token, @csrf_token)
+      end
+    end}
     <?r if @user.is_admin ?>
-    #{form_for(@user, :method => :post, :action => UserController.r(:remove_admin)) do |f|
-      f.input_hidden(:id)
-      f.input_submit('[Свергнуть этого админа!!!]', {:onClick => 'return confirm("А уверен ли?")'})
-      f.input_hidden(:csrf_token, @csrf_token)
-    end}
+      #{user_form(:remove_admin, 'Свергнуть этого админа!!!', 'btn-danger')}
     <?r else ?>
-    #{form_for(@user, :method => :post, :action => UserController.r(:make_admin)) do |f|
-      f.input_hidden(:id)
-      f.input_submit('[Превратить в админа]', {:onClick => 'return confirm("А уверен ли?")'})
-      f.input_hidden(:csrf_token, @csrf_token)
-    end}
+      #{user_form(:make_admin, 'Превратить в админа', 'btn-success')}
     <?r end ?>
     <?r if @user.is_disabled ?>
-    #{form_for(@user, :method => :post, :action => UserController.r(:enable)) do |f|
-      f.input_hidden(:id)
-      f.input_submit('[Enable]', {:onClick => 'return confirm("А уверен ли?")'})
-      f.input_hidden(:csrf_token, @csrf_token)
-    end}
+      #{user_form(:enable, 'Разрешить', 'btn-success')}
     <?r else ?>
-    #{form_for(@user, :method => :post, :action => UserController.r(:disable)) do |f|
-      f.input_hidden(:id)
-      f.input_submit('[Disable]', {:onClick => 'return confirm("А уверен ли?")'})
-      f.input_hidden(:csrf_token, @csrf_token)
-    end}
+      #{user_form(:disable, 'Запретить', 'btn-danger')}
     <?r end ?>
   <?r end ?>
 <?r end ?>

@@ -8,6 +8,7 @@ Sequel.migration do
       String :email, :unique => true, :null => false
       String :full_name
       String :password, :default => '123'
+      String :where_from
       TrueClass :is_admin, :default => false
       TrueClass :is_disabled, :default => true
       DateTime :last_submit

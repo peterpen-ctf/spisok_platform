@@ -15,10 +15,13 @@ Sequel.migration do
 
     users[:id=>1] = {:is_admin => true}
 
+    categories = DB[:categories]
+    categories.insert({:name => 'reverse', :description => 'esrever'})
+
     # Add tasks
     tasks = DB[:tasks]
-    tasks.insert(:name => 'finder1', :description => 'find the key!', :answer_regex => 'ans1', :price => 100)
-    tasks.insert(:name => 'finder2', :description => 'find the key again!', :answer_regex => 'ans2', :price => 200)
+    tasks.insert(:name => 'finder1', :description => 'find the key!', :category_id => 1, :answer_regex => 'ans1', :price => 100)
+    tasks.insert(:name => 'finder2', :description => 'find the key again!', :category_id => 1, :answer_regex => 'ans2', :price => 200)
 
   end
 

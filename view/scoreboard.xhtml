@@ -2,14 +2,17 @@
   <tr>
     <th></th>
     <th> Имя </th>
+    <th> Откуда </th>
     <th> Очки </th>
   </tr>
 
   <?r @user_scores.each_with_index do |user_score, i| ?>
   <?r cuser = User[user_score.user_id] ?>
+  <?r cuser.where_from ||= "" ?>
   <tr>
     <td style="width: 20px;"> #{i+1} </td>
     <td> #{cuser.full_name} <?r if user.email == cuser.email ?><span class="label label-info">Вы</span><?r end ?> </td>
+    <td title="#{cuser.where_from}" data-toggle="tooltip"> #{ (cuser.where_from.length > 32) ? cuser.where_from[0..32] + "..." : cuser.where_from } </td>
     <td> #{user_score.points} </td>
   </tr>
   <?r end ?>

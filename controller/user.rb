@@ -70,7 +70,6 @@ class UserController < Controller
   def save
     redirect r(:all) unless request.post?
     user_id = request.params['id']
-    user_data = request.subset(:email, :full_name, :password)
 
     # Update user. Check if user is admin or he wants to edit himself
     if !user_id.nil? and !user_id.empty?
@@ -91,7 +90,7 @@ class UserController < Controller
 
     # Add user. Admins only!
     else
-      if !logged_admin
+      if !logged_admin?
         flash[:error] = 'Нельзя этого делать!'
         redirect r(:all)
       end
@@ -102,9 +101,11 @@ class UserController < Controller
     end
 
     begin
-      user_data[:full_name] = StringHelper.escapeHTML(user_data[:full_name].to_s)
-      user_data[:email] = StringHelper.escapeHTML(user_data[:email].to_s)
-      user_data[:password] =  PasswordHelper.encrypt_password(user_data[:password].to_s)
+      user_data = {}
+#      user_data[:full_name] = StringHelper.escapeHTML(request[:full_name])
+#      user_data[:email] = StringHelper.escapeHTML(request[:email])
+      user_data[:where_from] = StringHelper.escapeHTML(request[:where_from])
+#     user_data[:password] =  PasswordHelper.encrypt_password(user_data[:password].to_s)
       user.update(user_data)
       flash[:success] = success
       redirect r(:all)

@@ -2,21 +2,17 @@
 <?r if @user.nil? ?>
   Такой юзер не найден!
 <?r else ?>
-  <h2>Профиль пользователя</h2>
+  <h2>Профиль пользователя ##{@user.id} <?r if @user.is_admin ?><span class="label label-warning">admin</span><?r end ?></h2>
   <dl class="dl-horizontal">
-    <dt>ID</dt>
-    <dd>#{@user.id}</dd>
     <dt>Полное имя</dt>
     <dd>#{@user.full_name}</dd>
     <dt>E-mail</dt>
     <dd>#{@user.email}</dd>
     <dt>Откуда</dt>
-    <dd>#{}</dd>
+    <dd>#{@user.where_from}</dd>
   </dl>
 <br />
-  <?r if @user.is_admin ?>
-    <p>Этот пользователь - <b>администратор</b>!</p>
-  <?r end ?>
+  
   <?r if logged_admin? ?>
     #{def user_form(action, btn_value, btn_class)
         form_for(@user, :method => :post, :action => UserController.r(action)) do |f|

@@ -3,6 +3,7 @@
     <th> ID </th>
     <!-- TODO: remove E-mail -->
     <th> E-mail </th>
+    <th> Откуда </th>
     <th> Полное имя </th>
   </tr>
 
@@ -15,6 +16,7 @@
         <span class="label label-important">admin</span> 
       <?r end ?>
     </td>
+    <td> #{user.where_from} </td>
     <td> #{user.full_name} </td>
   </tr>
   <?r end ?>

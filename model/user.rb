@@ -21,7 +21,6 @@ class User < Sequel::Model
   end
 
   def validate
-    super
     validates_format(/^.+\@.+\..+$/, :email, :message => "Неправльный адрес email!")
     validates_unique(:email, :message => "Email '#{email}' уже зарегистрирован!")
     validates_presence(:full_name, :message => "Не указано полное имя!")

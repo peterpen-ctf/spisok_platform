@@ -2,7 +2,6 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-
         <title>#{@title}</title>
         <link href="/css/united.bootstrap.min.css" rel="stylesheet" media="screen">
         <link href="/css/custom.css" rel="stylesheet">
@@ -15,11 +14,12 @@
             <div class="navbar navbar-inverse">
               <div class="navbar-inner">
               <?r if logged_in? ?>
-                <div class="pull-right navbar-text"> #{user.email}
+                <div class="pull-right navbar-text">
+                  <i class="icon-user icon-white"></i> #{user.email}
+                  <a href="#{UserController.r(:edit, user.id)}" class="label label-inverse" title="править"><i class="icon-edit icon-white"></i></a>
                 <?r if user.is_admin ?>
                   <span class="label label-important">admin</span> 
                 <?r end ?>
-                <a href="#{UserController.r(:edit, user.id)}" class="label" title="править"><i class="icon-edit icon-white"></i>править</a>
                 </div>
               <?r end ?>
                 <div class="container">
@@ -29,7 +29,7 @@
                       <li<?r if get_controller_class().name == "UserController" and @title == 'Участники' ?> class="active"<?r end ?>>#{UserController.a('Все-все', :all)}</li>
                     <?r end ?>
                     <?r if logged_in? ?>
-                      <li<?r if get_controller_class().name == "TaskController" ?> class="active"<?r end ?>>#{TaskController.a('Таски', :all)}</li>
+                      <li<?r if get_controller_class().name == "TaskController" ?> class="active"<?r end ?>>#{TaskController.a('Задания', :all)}</li>
                     <?r end ?>
                     <li<?r if @title == "Скорборд" ?> class="active"<?r end ?>>#{MainController.a('Скорборд', :scoreboard)}</a></li>
                     <?r if logged_in? ?>

@@ -108,7 +108,7 @@ class UserController < Controller
 #     user_data[:password] =  PasswordHelper.encrypt_password(user_data[:password].to_s)
       user.update(user_data)
       flash[:success] = success
-      redirect r(:all)
+      redirect(logged_admin? ? r(:all) : '/')
     rescue => e
       Ramaze::Log.error(e)
       flash[:error] = error

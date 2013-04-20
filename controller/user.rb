@@ -6,8 +6,16 @@ class UserController < Controller
 
   include Rack::Recaptcha::Helpers
 
+  # basic actions
+  before(:edit, :edit_self, :save) do
+    if !logged_in?
+      flash[:error] = 'Невозможно!'
+      redirect '/'
+    end
+  end
+
   # admin actions
-  before(:make_admin, :remove_admin, :enable, :disable, :all) do
+  before(:make_admin, :remove_admin, :enable, :disable, :all, :new, :delete, :show) do
     if !logged_admin?
       flash[:error] = 'Нельзя делать такого!'
       redirect '/'
@@ -16,7 +24,7 @@ class UserController < Controller
 
   # csrf checks
   before_all do
-    csrf_protection(:make_admin, :remove_admin, :enable, :disable) do
+    csrf_protection(:make_admin, :remove_admin, :enable, :disable, :save, :delete) do
       respond("CSRF token error!", 401)
     end
   end
@@ -34,6 +42,100 @@ class UserController < Controller
       flash[:error] = 'Нет такого...'
     end
     render_view :user_profile
+  end
+
+  def edit_self
+    user_id = @current_user.id
+    redirect r(:edit, user_id)
+  end
+
+  def edit(user_id)
+    @user = User[user_id]
+    if @user.nil? or (!logged_admin? and @current_user.id.to_s != user_id)
+      flash[:error] = 'Нельзя редактировать этого пользователя!'
+      redirect '/'
+    end
+    @csrf_token =  get_csrf_token()
+    @title = 'Редактировать пользователя'
+    @submit_action = :update
+    render_view :edit_user
+  end
+
+  def new
+    @csrf_token =  get_csrf_token()
+    @title = 'Создать пользователя'
+    @submit_action = :create
+  end
+
+  def save
+    redirect r(:all) unless request.post?
+    user_id = request.params['id']
+    user_data = request.subset(:email, :full_name, :password)
+
+    # Update user. Check if user is admin or he wants to edit himself
+    if !user_id.nil? and !user_id.empty?
+
+      if !logged_admin? and @current_user.id.to_s != user_id
+        flash[:error] = 'Нельзя этого делать!'
+        redirect r(:all)
+      end
+
+      user = User[user_id]
+      if user.nil?
+        flash[:error] = 'Неправильный персонаж!'
+        redirect r(:all)
+      end
+
+      success = 'Юзер обновлен, ура!'
+      error = 'Невозможно обновить пользователя, беда...'
+
+    # Add user. Admins only!
+    else
+      if !logged_admin
+        flash[:error] = 'Нельзя этого делать!'
+        redirect r(:all)
+      end
+
+      user = User.new
+      success = 'Пользователь успешно создан!'
+      error = 'Невозможно создать пользователя...'
+    end
+
+    begin
+      user_data[:full_name] = StringHelper.escapeHTML(user_data[:full_name].to_s)
+      user_data[:email] = StringHelper.escapeHTML(user_data[:email].to_s)
+      user_data[:password] =  PasswordHelper.encrypt_password(user_data[:password].to_s)
+      user.update(user_data)
+      flash[:success] = success
+      redirect r(:all)
+    rescue => e
+      Ramaze::Log.error(e)
+      flash[:error] = error
+      redirect_referrer
+    end
+  end
+
+  def delete
+    redirect r(:all) unless request.post?
+    id = request.params['id']
+
+    user = User[id]
+    if user.nil?
+      flash[:error] = 'Невозможно удалить пользователя: неправильный id'
+      redirect_referrer
+    end
+
+    begin
+      user_score = Scoreboard.find :user_id => user.id
+      user_score.destroy
+      user.destroy
+      flash[:success] = 'Всё окай, пользователь удален'
+      redirect r(:all)
+    rescue => e
+      Ramaze::Log.error(e)
+      flash[:error] = 'Проблемы с зависимостями!'
+      redirect_referrer
+    end
   end
 
   def all

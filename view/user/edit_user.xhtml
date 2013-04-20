@@ -1,0 +1,14 @@
+<div>
+  #{form_for(@user, :method => :post, :action => UserController.r(:save), :class => 'form-horizontal') do |f|
+    params = {:required => 'required'}
+    submit_label = @submit_action == :create ? 'Создать пользователя' : 'Обновить пользователя'
+
+    f.input_hidden(:id)
+    f.input_text('Email', :email, params.merge({:disabled => 'disabled'}))
+    f.input_text('Имя, Фамилия', :full_name, params.merge({:disabled => 'disabled'}))
+    f.input_text('Откуда вы', :where_from, params.merge({:value => ''}))
+    f.g.span('Укажите, пожалуйста, свой университет или...', :class => 'help-inline')
+    f.input_submit(submit_label, {:class => 'btn btn-primary'})
+    f.input_hidden(:csrf_token, @csrf_token)
+  end}
+</div>

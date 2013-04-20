@@ -19,6 +19,7 @@
                 <?r if user.is_admin ?>
                   <span class="label label-important">admin</span> 
                 <?r end ?>
+                <a href="#{UserController.r(:edit, user.id)}" class="label" title="править"><i class="icon-edit icon-white"></i>править</a>
                 </div>
               <?r end ?>
                 <div class="container">

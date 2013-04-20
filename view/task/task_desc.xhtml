@@ -2,7 +2,7 @@
 <?r if @task.nil? ?>
   Нет такого таска!
 <?r else ?>
-  <h2>#{@task.name} — #{@task.category} [#{@task.price}]</h2>
+  <h2>#{@task.category.name} — #{@task.name} [#{@task.price}]</h2>
   <p>#{@task.description}</p>
 
   <?r if logged_in? ?>

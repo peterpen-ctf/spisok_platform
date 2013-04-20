@@ -44,15 +44,15 @@ class TaskController < Controller
   end
 
   def all
-    @tasks = Task.all.select { |x| x.is_published or logged_admin? }
+    @tasks = Task.all.select { |x| x.is_published or logged_admin? }.sort {|a,b| a.price <=> b.price} 
     @title = 'Все таски'
   end
 
-
   def new
     @task  = Task.new
+    @categories = categories_list()
     @submit_action = :create
-    @csrf_token =  get_csrf_token()
+    @csrf_token = get_csrf_token()
     @title = 'Создать самый новый таск'
     render_view :edit_task
   end
@@ -63,9 +63,10 @@ class TaskController < Controller
       flash[:error] = 'Невозможно редактировать: неправильный таск!'
       redirect r(:all)
     end
+    @categories = categories_list()
     @title = 'Редактировать таск'
     @submit_action = :update
-    @csrf_token =  get_csrf_token()
+    @csrf_token = get_csrf_token()
     render_view :edit_task
   end
 
@@ -73,8 +74,6 @@ class TaskController < Controller
   def save
     redirect r(:all) unless request.post?
     id = request.params['id']
-    task_data = request.subset(:name, :description, :answer_regex, :price)
-    task_data[:is_published] = request[:is_published] ? true : false
 
     # Update task
     if !id.nil? and !id.empty?
@@ -94,8 +93,20 @@ class TaskController < Controller
       error = 'Невозможно создать таск!'
     end
 
+    task_data = request.subset(:name, :description, :answer_regex, :price)
+    task_data[:is_published] = request[:is_published] ? true : false
+    category_id = request[:category]
+
+    if !category_id.nil? and !category_id.empty?
+        category = Category[category_id]
+        if category.nil?
+            flash[:error] = 'Нет такой категории'
+        end
+    end
+
     begin
       task_data = StringHelper.sanitize_basic(task_data)
+      task_data[:category] = category
       task.update(task_data)
       flash[:success] = success
       redirect r(:all)
@@ -140,5 +151,11 @@ class TaskController < Controller
       redirect r(:all)
     end
   end
+
+  def categories_list
+    Category.all.map {|x| {x.id => x.name} }.reduce {|a, b| a.merge(b)}
+  end
+
+  private :categories_list
 
 end

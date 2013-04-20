@@ -17,6 +17,6 @@ class Task < Sequel::Model
   end
 
   def validate
-    validates_presence([:name, :description])
+    validates_presence([:name, :category, :answer_regex, :price, :description])
   end
 end

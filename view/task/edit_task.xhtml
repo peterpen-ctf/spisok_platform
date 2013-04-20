@@ -3,11 +3,12 @@
   params = {:required => 'required'}
   submit_label = @submit_action == :create ? 'Создать таск' : 'Обновить таск'
   f.input_hidden(:id)
-  f.input_text('Название таска', :name, params)
-  f.textarea('Описание таска', :description, params.merge({:style => 'width: 800px; height: 100px'}))
+  f.input_text('Название таска', :name, params.merge({:class => 'input-xxlarge'}))
+  f.select('Категория', :category, params.merge({:values => @categories, :selected => (@task.category.nil? ? nil : @task.category.id) }))
+  f.textarea('Описание таска', :description, params.merge({:class => 'input-xxlarge', :rows => 8}))
+  f.input_text('Ответ', :answer_regex, params.merge({:class => 'input-xxlarge'}))
+  f.input_text('Стоимость', :price, params.merge({:class => 'input-mini'}))
   f.input_checkbox("Опубликован", :is_published, checked=(@task.is_published ? @task.is_published : nil), {:show_value => false})
-  f.input_text('Стоимость', :price, params)
-  f.input_text('Ответ', :answer_regex, params)
   f.input_submit(submit_label, {:class => 'btn btn-primary'})
   f.input_hidden(:csrf_token, @csrf_token)
 end}

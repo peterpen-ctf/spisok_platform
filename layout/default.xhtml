@@ -15,7 +15,7 @@
             <div class="navbar navbar-inverse">
               <div class="navbar-inner">
               <?r if logged_in? ?>
-                <div class="pull-right" style="padding: 10px 0 0 0; color:white"> #{user.email}
+                <div class="pull-right navbar-text"> #{user.email}
                 <?r if user.is_admin ?>
                   <span class="label label-important">admin</span> 
                 <?r end ?>

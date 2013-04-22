@@ -20,7 +20,7 @@ class MainController < Controller
 
   def scoreboard
     @title = 'Скорборд'
-    @user_scores = Scoreboard.all.sort {|a,b| b.points <=> a.points}
+    @user_scores = Scoreboard.all.sort {|a,b| (b.points != a.points) ? b.points <=> a.points : a.user.penalty <=> b.user.penalty}
   end
 
   # the string returned at the end of the function is used as the html body

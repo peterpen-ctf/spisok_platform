@@ -84,6 +84,7 @@ class User < Sequel::Model
       # Add points, refresh the scoreboard.
       # TODO Race condition! But...one thread at a time????
       add_solved_task(task)
+      self.update(:penalty => self.penalty + (now - Time.utc(2013)).floor)
       Scoreboard.update_scores
       return {:success => true}
     else

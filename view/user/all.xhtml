@@ -5,6 +5,7 @@
     <th> E-mail </th>
     <th> Откуда </th>
     <th> Полное имя </th>
+    <th> Время </th>
   </tr>
 
   <?r @users.each do |user| ?>
@@ -18,6 +19,7 @@
     </td>
     <td> #{user.where_from} </td>
     <td> #{user.full_name} </td>
+    <td> #{user.penalty} </td>
   </tr>
   <?r end ?>
 

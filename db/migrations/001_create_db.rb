@@ -12,6 +12,7 @@ Sequel.migration do
       TrueClass :is_admin, :default => false
       TrueClass :is_disabled, :default => true
       DateTime :last_submit
+      Integer :penalty, :default => 0
     end
 
     create_table :contests do

@@ -3,6 +3,8 @@ require 'sequel'
 
 class Scoreboard < Sequel::Model(:scoreboard)
 
+  many_to_one :user
+
   def self.update_scores
     users = User.all
     users.each do |user|

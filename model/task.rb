@@ -11,6 +11,8 @@ class Task < Sequel::Model
 
   plugin :validation_helpers
 
+  attr_accessor :solvers_num
+
   def check_answer(given_answer)
     # TODO regexp check?
     self.answer_regex.to_s == given_answer.to_s

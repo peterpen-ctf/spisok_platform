@@ -24,7 +24,7 @@
         <?r if (not task.is_published) then classes.push "warning" end ?>
         <tr<?r if !classes.empty? ?> class="#{classes.join ' '}"<?r end ?>>
         <td>
-          #{TaskController.a(task.name, :show, task.id)}
+          #{TaskController.a(task.name, :show, task.id)} (решили: #{task.solvers_num})
           <?r if logged_admin? ?>
           <a href="#{TaskController.r(:edit, task.id)}" class="label label-warning" title="править"><i class="icon-edit icon-white"></i> править</a>
           <?r end ?>
@@ -58,7 +58,7 @@
       <?r if (not task.is_published) then classes.push "warning" end ?>
       <tr<?r if !classes.empty? ?> class="#{classes.join ' '}"<?r end ?>>
       <td>
-        #{TaskController.a(task.name, :show, task.id)}
+        #{TaskController.a(task.name, :show, task.id)} (решили: #{task.solvers_num})
         <?r if logged_admin? ?>
         <a href="#{TaskController.r(:edit, task.id)}" class="label label-warning" title="править"><i class="icon-edit icon-white"></i> править</a>
         <?r end ?>

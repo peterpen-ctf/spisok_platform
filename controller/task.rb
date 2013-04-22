@@ -44,7 +44,12 @@ class TaskController < Controller
   end
 
   def all
-    @tasks = Task.all.select { |x| x.is_published or logged_admin? }.sort {|a,b| a.price <=> b.price} 
+    @tasks = Task.all.select { |x| x.is_published or logged_admin? }.sort {|a,b| a.price <=> b.price}
+    @tasks.each do |task|
+      # FIXME DAMN SHIT!!!
+      solvers_group = Solution.group_and_count(:task_id).where(:task_id => task.id).first
+      task.solvers_num = solvers_group ? solvers_group.values[:count] : 0
+    end
     @title = 'Все таски'
   end
 

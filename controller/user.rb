@@ -15,7 +15,8 @@ class UserController < Controller
   end
 
   # admin actions
-  before(:make_admin, :remove_admin, :enable, :disable, :all, :new, :delete, :show) do
+  before(:make_admin, :remove_admin, :enable, :disable, :all,
+         :new, :delete, :show, :approve, :disapprove) do
     if !logged_admin?
       flash[:error] = 'Нельзя делать такого!'
       redirect '/'
@@ -24,7 +25,8 @@ class UserController < Controller
 
   # csrf checks
   before_all do
-    csrf_protection(:make_admin, :remove_admin, :enable, :disable, :save, :delete) do
+    csrf_protection(:make_admin, :remove_admin, :enable, :disable,
+                    :save, :delete, :approve, :disapprove) do
       respond("CSRF token error!", 401)
     end
   end

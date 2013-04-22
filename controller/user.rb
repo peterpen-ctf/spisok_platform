@@ -231,6 +231,7 @@ class UserController < Controller
     redirect_referrer
   end
 
+  # TODO merge enable and disable methods
   def enable
     redirect '/' unless request.post?
     user_id = request.params['id']
@@ -254,6 +255,26 @@ class UserController < Controller
       flash[:success] = 'Так ему и надо!'
       Scoreboard.update_scores
     end
+    redirect_referrer
+  end
+
+  def approve
+    redirect '/' unless request.post?
+    user_id = request.params['id']
+    user = User[user_id]
+    redirect_referrer if user.nil? or user.is_approved
+    user.update(:is_approved => true)
+    flash[:success] = 'Пользователь может претендовать на приз!'
+    redirect_referrer
+  end
+
+  def disapprove
+    redirect '/' unless request.post?
+    user_id = request.params['id']
+    user = User[user_id]
+    redirect_referrer if user.nil? or !user.is_approved
+    user.update(:is_approved => false)
+    flash[:success] = 'Пользователь участвует в общем зачете.'
     redirect_referrer
   end
 

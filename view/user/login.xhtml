@@ -1,7 +1,4 @@
 <div>
-<p>llama@ya.ru:123 - he's an admin</p>
-<p>the rest (*@ya.ru:123) - ordinary users</p>
-
 #{form_for(@user, :method => :post, :action => UserController.r(:login)) do |f|
   params = {:required => 'required'}
   f.input_text('E-mail', :email, params)

@@ -7,10 +7,11 @@ Sequel.migration do
       primary_key :id
       String :email, :unique => true, :null => false
       String :full_name
-      String :password, :default => '123'
+      String :password, :null => false
       String :where_from
-      TrueClass :is_admin, :default => false
-      TrueClass :is_disabled, :default => true
+      TrueClass :is_admin, :default => false, :null => false
+      TrueClass :is_disabled, :default => true, :null => false
+      TrueClass :is_approved, :default => false, :null => false
       DateTime :last_submit
       Integer :penalty, :default => 0
     end

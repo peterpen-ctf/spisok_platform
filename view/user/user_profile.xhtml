@@ -26,11 +26,19 @@
     <?r else ?>
       #{user_form(:make_admin, 'Превратить в админа', 'btn-success')}
     <?r end ?>
+
     <?r if @user.is_disabled ?>
       #{user_form(:enable, 'Разрешить', 'btn-success')}
     <?r else ?>
       #{user_form(:disable, 'Запретить', 'btn-danger')}
     <?r end ?>
+
+    <?r if @user.is_approved ?>
+      #{user_form(:disapprove, 'Снять с зачёта', 'btn-danger')}
+    <?r else ?>
+      #{user_form(:approve, 'Подтвердить участие', 'btn-success')}
+    <?r end ?>
+
   <?r end ?>
 <?r end ?>
 </div>

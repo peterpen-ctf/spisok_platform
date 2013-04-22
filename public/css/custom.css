@@ -34,3 +34,16 @@ footer
 
 .success a {color: #5D8763}
 .success a.label {color: white}
+
+
+.green a
+{
+    color: darkgreen;
+}
+
+.green .active a,
+.green .active a:hover,
+.green .active a:focus
+{
+    background-color: lightseagreen;
+}

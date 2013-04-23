@@ -42,7 +42,7 @@ namespace :ramaze do
       use Rack::ETag, 'public'
       use Rack::Head
       use Ramaze::Reloader
-      use Rack::Recaptcha, :public_key => '6Le-1t8SAAAAAK9tkfenGSzQVl_too0Y7Slf37Dh', :private_key => '6Le-1t8SAAAAAIHLAA8em-2q_VR0AOQF2tKiBNRS'
+      use Rack::Recaptcha, :public_key => '6LfM6t8SAAAAAH85nHYFRkhvlD2ptOlplA3jMDVr', :private_key => '6LfM6t8SAAAAAF3Dc4leL1K0_iKjNFGFD_f3umbm'
       run Ramaze.core
     end
 

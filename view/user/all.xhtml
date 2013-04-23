@@ -10,15 +10,15 @@
 
   <?r @users.each do |user| ?>
   <tr<?r if user.is_disabled  ?> class="warning"<?r end ?>>
-    <td> #{user.id} </td>
+    <td>#{user.id}</td>
     <td>
       <a href="#{UserController.r(:show, user.id)}">#{user.email}</a>
       <?r if user.is_admin ?>
         <span class="label label-important">admin</span> 
       <?r end ?>
     </td>
-    <td> #{user.where_from} </td>
-    <td> #{user.full_name} </td>
+    <td>#{ (user.where_from.to_s.length > 64) ? user.where_from[0..64] + "..." : user.where_from }</td>
+  <td> #{user.full_name} </td>
     <td> #{user.penalty} </td>
   </tr>
   <?r end ?>

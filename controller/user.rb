@@ -87,7 +87,7 @@ class UserController < Controller
         redirect r(:all)
       end
 
-      success = 'Юзер обновлен, ура!'
+      success = 'Пользователь обновлен, ура!'
       error = 'Невозможно обновить пользователя, беда...'
 
     # Add user. Admins only!

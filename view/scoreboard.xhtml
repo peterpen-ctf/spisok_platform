@@ -11,8 +11,8 @@
       <table class="table">
         <tr>
           <th style="width: 20px;"></th>
-          <th style="width: 500px;"> Имя </th>
-          <th> Откуда </th>
+          <th style="width: 300px;"> Имя </th>
+          <th style="width: 460px"> Откуда </th>
           <th> Очки </th>
         </tr>
 
@@ -22,7 +22,7 @@
         <tr>
           <td> #{i+1} </td>
           <td> #{cuser.full_name} <?r if user.email == cuser.email ?><span class="label label-info">Вы</span><?r end ?> </td>
-          <td title="#{cuser.where_from}" data-toggle="tooltip"> #{ (cuser.where_from.length > 32) ? cuser.where_from[0..32] + "..." : cuser.where_from } </td>
+          <td title="#{cuser.where_from}" data-toggle="tooltip"> #{ (cuser.where_from.length > 64) ? cuser.where_from[0..64] + "..." : cuser.where_from } </td>
           <td> #{user_score.points} </td>
         </tr>
         <?r end ?>
@@ -34,8 +34,8 @@
       <table class="table">
         <tr>
           <th style="width: 20px;"></th>
-          <th style="width: 500px;"> Подтвержденный пользователь </th>
-          <th> Откуда </th>
+          <th style="width: 300px;"> Подтвержденный пользователь </th>
+          <th style="width: 460px"> Откуда </th>
           <th> Очки </th>
         </tr>
 
@@ -45,9 +45,9 @@
         <?r next unless cuser.is_approved ?>
         <?r cuser.where_from ||= "" ?>
         <tr>
-          <td style="width: 20px;"> #{i} </td>
-          <td style="width: 500px;"> #{cuser.full_name} <?r if user.email == cuser.email ?><span class="label label-info">Вы</span><?r end ?> </td>
-          <td title="#{cuser.where_from}" data-toggle="tooltip"> #{ (cuser.where_from.length > 32) ? cuser.where_from[0..32] + "..." : cuser.where_from } </td>
+          <td> #{i} </td>
+          <td> #{cuser.full_name} <?r if user.email == cuser.email ?><span class="label label-info">Вы</span><?r end ?> </td>
+          <td title="#{cuser.where_from}" data-toggle="tooltip"> #{ (cuser.where_from.length > 64) ? cuser.where_from[0..64] + "..." : cuser.where_from } </td>
           <td> #{user_score.points} </td>
         </tr>
         <?r i += 1 ?>

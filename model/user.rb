@@ -90,12 +90,18 @@ class User < Sequel::Model
     Attempt.create(:value => given_answer, :user_id => self.id, :task_id => task.id,
                    :time => now, :value => given_answer)
 
+
     if task.check_answer(given_answer)
       # Add points, refresh the scoreboard.
       # TODO Race condition! But...one thread at a time????
       add_solved_task(task)
       self.update(:penalty => self.penalty + (now - Time.utc(2013)).floor)
       Scoreboard.update_scores
+
+      # Onsite approval (HARDCODE!!!)
+      if task.name == 'ProveYourValor' and task.category.name == 'onsite'
+        self.update :is_approved => true
+      end
       return {:success => true}
     else
       return {:success => false, :errors => ["Неправильный флаг!"]}

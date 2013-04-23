@@ -6,5 +6,7 @@
   f.g.button('Войти', :class => 'btn btn-primary', :type => 'submit')
   f.g.text(' ')
   f.g.a("Регистрация", :class => "btn", :href => UserController.r(:register))
+  f.g.br
+  f.g.a("Забыли пароль?", :href => UserController.r(:recover))
 end}
 </div>

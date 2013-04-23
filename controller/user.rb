@@ -207,6 +207,47 @@ class UserController < Controller
     redirect '/'
   end
 
+  def recover
+    if request.post?
+      user = User.first(:email => request.params['email'])
+      if user.nil?
+        flash[:error] = 'Пользователя с данным E-mail не существует'
+        redirect UserController.r(:recover)
+      else
+        if !user.send_recovery
+          flash[:error] = 'Что-то пошло не так, попробуйте еще раз'
+          redirect UserController.r(:recover)
+        end
+        flash[:success] = 'Письмо с дальнейшней инструкцией по восстановлению пароля выслано на указанный E-mail'
+        redirect MainController.r(:scoreboard)
+      end
+    end
+    @title = 'Восстановить пароль пользователя'
+  end
+
+  def new_password(user_hash)
+    @user_hash = user_hash
+    password_recovery = PasswordRecovery.first(:user_hash => user_hash)
+    if password_recovery.nil?
+      flash[:error] = 'Ссылка для установки нового пароля уже использована или неверная'
+      redirect '/'
+    end
+    user = password_recovery.user
+    if request.post?
+      # form data were sent
+      user.set_new_password(request[:password],
+                            request[:password_confirm])
+      if user.valid?
+        password_recovery.destroy
+        flash[:success] = 'Пароль успешно изменён!'
+        redirect UserController.r(:login)
+      else
+        flash[:error] = user.errors.values.join("<br>")
+      end
+    end
+    @title = 'Установить новый пароль'
+  end
+
   def make_admin
     redirect MainController.r(:index) unless request.post?
     user_id = request.params['id']

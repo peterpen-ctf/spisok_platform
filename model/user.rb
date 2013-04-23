@@ -30,6 +30,16 @@ class User < Sequel::Model
     end
   end
 
+  # self.errors will contain errors if any occured
+  def set_new_password(password, password_confirm)
+    new_password(password, password_confirm)
+    begin
+      self.save
+    rescue => e
+      Ramaze::Log.error(e.message)
+    end
+  end
+
   def self.register(email, full_name, password, password_confirm)
     email = StringHelper.escapeHTML(email.strip)
     full_name = StringHelper.escapeHTML(full_name)
@@ -106,6 +116,15 @@ class User < Sequel::Model
               :template => 'register_confirm.html',
               :vars => {:confirm_link => confirm_link,
                         :debug_confirm_link => debug_confirm_link})
+  end
+
+  def send_recovery
+    password_recovery = PasswordRecovery.add_recovery(self)
+    return false if password_recovery.nil?
+    recovery_link = 'http://spisok2013.ppctf.net/user/new_password/%s' % password_recovery.user_hash
+    send_mail(:subject => "Восстановление пароля для SpisokCTF 2013",
+              :template => 'password_recovery.html',
+              :vars => {:recovery_link => recovery_link})
   end
 
 end

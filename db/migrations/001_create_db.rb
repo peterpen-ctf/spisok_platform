@@ -91,5 +91,13 @@ Sequel.migration do
       foreign_key :user_id, :users
       DateTime :time
     end
+
+    create_table :password_recoveries do
+      primary_key :id
+      String :user_hash, :unique => true, :null => false
+      foreign_key :user_id, :users
+      DateTime :time
+    end
+
   end
 end

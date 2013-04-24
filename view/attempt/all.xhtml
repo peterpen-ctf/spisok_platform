@@ -10,8 +10,8 @@
   <tr<?r if Task[attempt.task.id].check_answer(attempt.value) ?> class="success"<?r end ?>>
     <td>#{UserController.a(attempt.user.full_name, :show, attempt.user.id)} <a href="#{AttemptController.r(:by_user, attempt.user.id)}" class="icon icon-info-sign"></a></td>
     <td>#{TaskController.a(attempt.task.name, :show, attempt.task.id)} <a href="#{AttemptController.r(:by_task, attempt.task.id)}" class="icon icon-info-sign"></a></td>
-    <td>#{attempt.value.escape}</td>
-    <td>#{attempt.time}</td>
+    <td title="#{attempt.value}">#{(attempt.value.length > 60 ? attempt.value[0...60] + "..." : attempt.value).escape}</td>
+    <td>#{attempt.time.strftime("%T %d.%m.%y")}</td>
   </tr>
   <?r end ?>
 

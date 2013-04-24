@@ -1,13 +1,15 @@
+<?r approved = (not @current_user.nil?) and @current_user.is_approved  ?>
+
 <div class="tabbable">
 
   <ul class="nav nav-pills green">
-    <li class="active"><a href="#all" data-toggle="tab"><i class="icon icon-white icon-star"></i> Все участники</a></li>
-    <li><a href="#approved" data-toggle="tab">Подтвержденные</a></li>
+    <li<?r if not approved ?> class="active"<?r end ?>><a href="#all" data-toggle="tab"><i class="icon icon-white icon-star"></i> Все участники</a></li>
+    <li<?r if approved ?> class="active"<?r end ?>><a href="#approved" data-toggle="tab"><i class="icon icon-white icon-ok"></i> Подтвержденные</a></li>
   </ul>
 
   <div class="tab-content">
 
-    <div class="tab-pane active" id="all">
+    <div class="tab-pane<?r if not approved ?> active<?r end ?>" id="all">
       <table class="table">
         <tr>
           <th style="width: 20px;"></th>
@@ -17,7 +19,7 @@
         </tr>
 
         <?r @user_scores.each_with_index do |user_score, i| ?>
-        <?r cuser = User[user_score.user_id] ?>
+        <?r cuser = user_score.user ?>
         <?r cuser.where_from ||= "" ?>
         <tr>
           <td> #{i+1} </td>
@@ -30,7 +32,7 @@
     </div>
 
 
-  <div class="tab-pane" id="approved">
+  <div class="tab-pane<?r if approved ?> active<?r end ?>" id="approved">
       <table class="table">
         <tr>
           <th style="width: 20px;"></th>
@@ -40,9 +42,8 @@
         </tr>
 
         <?r i = 1 ?>
-        <?r @user_scores.each do |user_score| ?>
-        <?r cuser = User[user_score.user_id] ?>
-        <?r next unless cuser.is_approved ?>
+        <?r @user_scores.select {|u| u.user.is_approved}.each do |user_score| ?>
+        <?r cuser = user_score.user ?>
         <?r cuser.where_from ||= "" ?>
         <tr>
           <td> #{i} </td>

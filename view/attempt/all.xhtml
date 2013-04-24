@@ -8,8 +8,8 @@
 
   <?r @attempts.each do |attempt| ?>
   <tr<?r if Task[attempt.task.id].check_answer(attempt.value) ?> class="success"<?r end ?>>
-    <td>#{AttemptController.a(attempt.user.full_name, :show, attempt.user.id)}</td>
-    <td>#{TaskController.a(attempt.task.name, :show, attempt.task.id)}</td>
+    <td>#{AttemptController.a(attempt.user.full_name, :by_user, attempt.user.id)}</td>
+    <td>#{AttemptController.a(attempt.task.name, :by_task, attempt.task.id)}</td>
     <td>#{attempt.value.escape}</td>
     <td>#{attempt.time}</td>
   </tr>

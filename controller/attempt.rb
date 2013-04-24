@@ -18,7 +18,7 @@ class AttemptController < Controller
     render_view :all
   end
 
-  def show(user_id)
+  def by_user(user_id)
     user = User[user_id]
     if user.nil?
       flash[:error] = 'Нет такого юзера'
@@ -26,6 +26,17 @@ class AttemptController < Controller
     end
     @attempts = Attempt.all.select{|x| x.user == user}.sort{|a,b| b.time <=> a.time}
     @title = "Последние попытки " + user.full_name
+    render_view :all
+  end
+
+  def by_task(task_id)
+    task = Task[task_id]
+    if task.nil?
+      flash[:error] = 'Нет такого таска'
+      redirect '/'
+    end
+    @attempts = Attempt.all.select{|x| x.task == task}.sort{|a,b| b.time <=> a.time}
+    @title = "Последние попытки по " + task.name
     render_view :all
   end
 

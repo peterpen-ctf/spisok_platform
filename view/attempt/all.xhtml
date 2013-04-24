@@ -8,11 +8,20 @@
 
   <?r @attempts.each do |attempt| ?>
   <tr<?r if Task[attempt.task.id].check_answer(attempt.value) ?> class="success"<?r end ?>>
-    <td>#{AttemptController.a(attempt.user.full_name, :by_user, attempt.user.id)}</td>
-    <td>#{AttemptController.a(attempt.task.name, :by_task, attempt.task.id)}</td>
+    <td>#{UserController.a(attempt.user.full_name, :show, attempt.user.id)} <a href="#{AttemptController.r(:by_user, attempt.user.id)}" class="icon icon-info-sign"></a></td>
+    <td>#{TaskController.a(attempt.task.name, :show, attempt.task.id)} <a href="#{AttemptController.r(:by_task, attempt.task.id)}" class="icon icon-info-sign"></a></td>
     <td>#{attempt.value.escape}</td>
     <td>#{attempt.time}</td>
   </tr>
   <?r end ?>
 
 </table>
+
+<ul class="pager">
+  <li class="previous">
+    <a href="?limit=#{@limit}&page=#{@page-1}">&larr; Туда</a>
+  </li>
+  <li class="next">
+    <a href="?limit=#{@limit}&page=#{@page+1}">Сюда &rarr;</a>
+  </li>
+</ul>

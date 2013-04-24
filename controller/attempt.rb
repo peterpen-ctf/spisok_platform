@@ -11,10 +11,13 @@ class AttemptController < Controller
   end
 
   def index
+    @page = request[:page].to_i
     n = request[:limit].to_i
     if n <= 0 then n = 100 end
-    @attempts = Attempt.all.sort{|a,b| b.time <=> a.time}[0...n]
+
     @title = "Последние " + n.to_s + " попыток"
+    @attempts = Attempt.all.sort{|a,b| b.time <=> a.time}[@page * n... (@page+1) * n] || []
+    @limit = n
     render_view :all
   end
 
@@ -24,8 +27,13 @@ class AttemptController < Controller
       flash[:error] = 'Нет такого юзера'
       redirect '/'
     end
-    @attempts = Attempt.all.select{|x| x.user == user}.sort{|a,b| b.time <=> a.time}
+    @page = request[:page].to_i
+    n = request[:limit].to_i
+    if n <= 0 then n = 100 end
+
+    @attempts = Attempt.all.select{|x| x.user == user}.sort{|a,b| b.time <=> a.time}[@page * n... (@page+1) * n] || []
     @title = "Последние попытки " + user.full_name
+    @limit = n
     render_view :all
   end
 
@@ -35,8 +43,13 @@ class AttemptController < Controller
       flash[:error] = 'Нет такого таска'
       redirect '/'
     end
-    @attempts = Attempt.all.select{|x| x.task == task}.sort{|a,b| b.time <=> a.time}
+    @page = request[:page].to_i
+    n = request[:limit].to_i
+    if n <= 0 then n = 100 end
+
+    @attempts = Attempt.all.select{|x| x.task == task}.sort{|a,b| b.time <=> a.time}[@page * n... (@page+1) * n] || []
     @title = "Последние попытки по " + task.name
+    @limit = n
     render_view :all
   end
 

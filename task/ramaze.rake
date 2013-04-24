@@ -54,7 +54,7 @@ namespace :ramaze do
       :file    => __FILE__,
       :root    => Ramaze.options.roots,
       #:mode    => :live,
-      #:host   => '127.0.0.1',
+      :host   => '127.0.0.1',
     )
   end
 

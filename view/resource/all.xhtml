@@ -1,0 +1,78 @@
+<div class="tabbable">
+  <?r if logged_admin? ?>
+  <div class="pull-right"> #{ResourceController.a('Создать ресурс', :new)} </div>
+  <?r end ?>
+
+  <div class="tab-content">
+    <div class="tab-pane active" id="all">
+      <table class="table">
+        <tr>
+          <th>Задания</th>
+          <th style="width:180px">Решили</th>
+          <th style="width:180px">Цена</th>
+        </tr>
+
+        <?r if @resources.length != 0 ?>
+        <?r @resources.each do |resource| ?>
+        <?r classes = [] ?>
+        <?r if (@current_user.solved_resources.include? resource) then classes.push "success" end ?>
+        <?r if (not resource.is_published) then classes.push "warning" end ?>
+        <tr<?r if !classes.empty? ?> class="#{classes.join ' '}"<?r end ?>>
+        <td>
+          #{ResourceController.a(resource.name, :show, resource.id)}
+          <?r if logged_admin? ?>
+          <a href="#{ResourceController.r(:edit, resource.id)}" class="label label-warning" title="править"><i class="icon-edit icon-white"></i> править</a>
+          <?r end ?>
+          <span class="label label-info">#{ (resource.category.nil? ? "no category" : resource.category.name) }</span>
+        </td>
+        <td>#{resource.solvers_num}</td>
+        <td>#{resource.price}</td>
+      </tr>
+      <?r end ?>
+      <?r else ?>
+      <tr>
+        <td colspan="2">Пока нет доступных заданий</td>
+      </tr>
+      <?r end ?>
+    </table>
+
+  </div>
+
+
+  <?r Category.all.each do |cat| ?>
+  <div class="tab-pane" id="cat#{cat.id}">
+    <table class="table">
+      <tr>
+        <th>Задания категории #{cat.name}</th>
+        <th style="width:180px">Решили</th>
+        <th style="width:180px">Цена</th>
+      </tr>
+
+      <?r if @resources.select {|t| t.category.id == cat.id}.length != 0 ?>
+      <?r @resources.select {|t| t.category.id == cat.id}.each do |resource| ?>
+      <?r classes = [] ?>
+      <?r if (@current_user.solved_resources.include? resource) then classes.push "success" end ?>
+      <?r if (not resource.is_published) then classes.push "warning" end ?>
+      <tr<?r if !classes.empty? ?> class="#{classes.join ' '}"<?r end ?>>
+      <td>
+        #{ResourceController.a(resource.name, :show, resource.id)}
+        <?r if logged_admin? ?>
+        <a href="#{ResourceController.r(:edit, resource.id)}" class="label label-warning" title="править"><i class="icon-edit icon-white"></i> править</a>
+        <?r end ?>
+      </td>
+      <td>#{resource.solvers_num}</td>
+      <td>#{resource.price}</td>
+    </tr>
+    <?r end ?>
+    <?r else ?>
+    <tr>
+      <td colspan="2">Пока нет доступных заданий</td>
+    </tr>
+    <?r end ?>
+  </table>
+
+</div>
+        <?r end ?>
+        </div>
+        </div>
+

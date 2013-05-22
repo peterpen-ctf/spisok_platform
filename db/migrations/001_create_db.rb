@@ -69,9 +69,11 @@ Sequel.migration do
 
     create_table :resources do
       primary_key :id
+      foreign_key :author_id, :users
       String :name
       String :dockerfile
       Integer :version
+      TrueClass :is_requested
       TrueClass :is_running
     end
 

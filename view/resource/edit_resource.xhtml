@@ -1,12 +1,12 @@
-<div>
+<div class="row">
+<div class="span8">
 #{form_for(@resource, :method => :post, :action => ResourceController.r(:save)) do |f|
   params = {:required => 'required'}
-  submit_label = @submit_action == :create ? 'Создать ресурс' : 'Обновить ресурс'
+  submit_label = @submit_action == :create ? 'Создать ресурс' : 'Обновить'
   f.input_hidden(:id)
   f.input_text('Название ресурса', :name, params.merge({:class => 'input-xxlarge'}))
   f.textarea('Dockerfile', :dockerfile, params.merge({:class => 'input-xxlarge', :rows => 8}))
-  f.input_checkbox("Запущен", :is_running, checked=(@resource.is_running ? @resource.is_running : nil), {:show_value => false})
-  f.input_hidden(:version)
+  f.input_checkbox("Запуск запрошен", :is_requested, checked=(@resource.is_requested ? @resource.is_requested : nil), {:show_value => false})
   f.input_submit(submit_label, {:class => 'btn btn-primary'})
   f.input_hidden(:csrf_token, @csrf_token)
 end}
@@ -15,8 +15,36 @@ end}
 #{if @submit_action == :update
   form_for(@resource, :method => :post, :action => ResourceController.r(:delete)) do |f|
     f.input_hidden(:id)
-    f.input_submit('Удалить таск', {:class => 'btn btn-danger', :onClick => 'return confirm("А уверен ли?")'})
+    f.input_submit('Удалить', {:class => 'btn btn-danger', :onClick => 'return confirm("А уверен ли?")'})
     f.input_hidden(:csrf_token, @csrf_token)
   end
 end}
+
+#{if @submit_action == :update and @resource and @resource.is_running
+  form_for(@resource, :method => :post, :action => ResourceController.r(:stop)) do |f|
+    f.input_hidden(:id)
+    f.input_submit('Остановить!', {:class => 'btn btn-info', :onClick => 'return confirm("А уверен ли?")'})
+    f.input_hidden(:csrf_token, @csrf_token)
+  end
+end}
+
+#{if @submit_action == :update and @resource and !@resource.is_running
+  form_for(@resource, :method => :post, :action => ResourceController.r(:run)) do |f|
+    f.input_hidden(:id)
+    f.input_hidden(:version)
+    f.input_submit('Запустить!', {:class => 'btn btn-success', :onClick => 'return confirm("А уверен ли?")'})
+    f.input_hidden(:csrf_token, @csrf_token)
+  end
+end}
+</div>
+<div class="span4">
+#{if @submit_action == :update
+  form_for(@resource, :method => :post, :action => ResourceController.r(:change_linked_tasks)) do |f|
+    f.input_hidden(:id)
+    f.select('Связанные задачи (мультивыбор)', :tasks, {:multiple=> true, :values => @linked_tasks + @available_tasks, :selected => @linked_tasks})
+    f.input_hidden(:csrf_token, @csrf_token)
+    f.input_submit('Обновить!', {:class => 'btn btn-primary'})
+  end
+end}  
+</div>
 </div>

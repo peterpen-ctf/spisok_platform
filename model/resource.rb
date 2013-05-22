@@ -4,4 +4,5 @@
 require 'sequel'
 class Resource < Sequel::Model
   many_to_many :tasks
+  many_to_one :author, :class => :User
 end

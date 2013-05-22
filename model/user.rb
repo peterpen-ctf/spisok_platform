@@ -9,6 +9,8 @@ class User < Sequel::Model
                 :left_key => :user_id, :right_key => :task_id,
                 :class => 'Task'
 
+  one_to_many :resources
+
   plugin :validation_helpers
 
   def password=(password)

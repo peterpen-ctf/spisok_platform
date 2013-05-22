@@ -12,7 +12,7 @@ class ResourceController < Controller
   end
 
   # admin actions
-  before(:new, :edit, :save, :delete) do
+  before(:new, :edit, :save, :delete, :run, :stop) do
     unless logged_admin?
       flash[:error] = 'Вам не позволено совершать эти действия, сэр!'
       redirect r(:all)
@@ -21,7 +21,7 @@ class ResourceController < Controller
 
   # csrf checks
   before_all do
-    csrf_protection(:save, :delete) do
+    csrf_protection(:save, :delete, :run, :stop, :change_linked_tasks) do
       respond("CSRF token error!", 401)
     end
   end
@@ -37,24 +37,26 @@ class ResourceController < Controller
       @title = @resource.name
     else
       @resource = nil
-      @title = 'Таск не найден...'
+      @title = 'Ресурс не найден...'
     end
-    @is_resource_solved = @current_user.solved_resources.include? @resource
     render_view :resource_desc
   end
 
   def all
-    @resources = Resource.all.select { |x| x.is_published or logged_admin? }.sort {|a,b| a.price <=> b.price}
-    @resources.each do |resource|
-      # FIXME DAMN SHIT!!!
-      solvers_group = Solution.group_and_count(:resource_id).where(:resource_id => resource.id).first
-      resource.solvers_num = solvers_group ? solvers_group.values[:count] : 0
+    @resources = Resource.all.select { |x| @current_user == x.author or logged_admin? }.sort_by do |x|
+      sum = 0
+      sum -= 4 if x.is_requested ^ x.is_running
+      sum -= 2 if x.is_requested
+      sum -= 1 if x.is_running
+      sum
     end
     @title = 'Все ресурсы'
   end
 
   def new
     @resource  = Resource.new
+    @linked_tasks = []
+    @available_tasks = []
     @categories = categories_list()
     @submit_action = :create
     @csrf_token = get_csrf_token()
@@ -68,7 +70,8 @@ class ResourceController < Controller
       flash[:error] = 'Невозможно редактировать: неправильный ресурс!'
       redirect r(:all)
     end
-    @categories = categories_list()
+    @linked_tasks = @resource.tasks.map { |t| t.name }
+    @available_tasks = Task.all.select { |t| logged_admin? or @current_user == t.author }.map { |t| t.name } - @linked_tasks
     @title = 'Редактировать ресурс'
     @submit_action = :update
     @csrf_token = get_csrf_token()
@@ -94,12 +97,14 @@ class ResourceController < Controller
     # New resource
     else
       resource = Resource.new
-      success = 'Таск успешно создан'
+      resource.author = @current_user
+      success = 'Ресурс успешно создан'
       error = 'Невозможно создать ресурс!'
     end
 
-    resource_data = request.subset(:name, :dockerfile, :is_running, :version)
+    resource_data = request.subset(:name, :dockerfile, :is_running, :is_requested, :version)
     resource_data[:is_running] = request[:is_running] ? true : false
+    resource_data[:is_requested] = request[:is_requested] ? true : false
 
     begin
       resource_data = StringHelper.sanitize_basic(resource_data)
@@ -112,26 +117,6 @@ class ResourceController < Controller
       redirect_referrer
     end
   end
-
-
-  def submit(id)
-    redirect r(:all) unless request.post?
-    resource = Resource[id]
-    if resource.nil?
-      flash[:error] = 'Ошибка: неправильный ресурс!'
-      redirect r(:all)
-    end
-
-    given_answer = request.params['answer'].to_s
-    result = @current_user.try_submit_answer(resource, given_answer)
-    if result[:success]
-      flash[:success] = 'Поздравляем, ресурс решен!'
-    else
-      flash[:error] = result[:errors].join("<br>")
-    end
-    redirect r(:show, resource.id)
-  end
-
 
   def delete
     redirect r(:all) unless request.post?
@@ -150,6 +135,67 @@ class ResourceController < Controller
 
   def categories_list
     Category.all.map {|x| {x.id => x.name} }.reduce {|a, b| a.merge(b)}
+  end
+
+  def run
+    redirect r(:all) unless request.post?
+    id = request.params['id']
+
+    resource = Resource[id]
+    if resource.nil?
+      flash[:error] = 'Невозможно запустить ресурс: неправильный id'
+      redirect_referrer
+    else
+      Ramaze::Log.error("#{id} запущен")
+      resource.is_running = true
+      resource.save
+      flash[:success] = 'Всё окай, ресурс запущен'
+      redirect r(:all)
+    end
+  end
+
+  def stop
+    redirect r(:all) unless request.post?
+    id = request.params['id']
+
+    resource = Resource[id]
+    if resource.nil?
+      flash[:error] = 'Невозможно остановить ресурс: неправильный id'
+      redirect_referrer
+    else
+      Ramaze::Log.error("#{id} остановлен")
+      resource.is_running = false
+      resource.save
+      flash[:success] = 'Всё окай, ресурс остановлен'
+      redirect r(:all)
+    end
+  end
+
+  def change_linked_tasks
+    id = request.params['id']
+    resource = Resource[id]
+    tasks = []
+    access_violated = false
+    request.params['tasks'].each do |task_name|
+      task = Task.first(:name => task_name)
+      if task.author != @current_user and !logged_admin?
+        access_violated = true
+        break
+      else
+        tasks << task
+      end
+    end
+
+    if access_violated
+      flash[:error] = 'Кто-то захотел связать не свою задачу...'
+      redirect_referrer
+    else
+      flash[:success] = 'Связанные задачи обновлены'
+      resource.remove_all_tasks
+      tasks.each { |t| resource.add_task t }
+      redirect_referrer
+    end
+
   end
 
   private :categories_list

@@ -12,13 +12,24 @@ class ResourceController < Controller
   end
 
   # admin actions
-  before(:new, :edit, :save, :delete, :run, :stop) do
+  before(:run, :stop) do
     unless logged_admin?
       flash[:error] = 'Вам не позволено совершать эти действия, сэр!'
       redirect r(:all)
     end
   end
 
+  # admin or owner
+  def check_permissions_and_redirect(resource_id)
+    if !logged_admin?
+      resource = Resource[resource_id]
+      if resource and resource.author != @current_user
+        flash[:error] = 'Кто Вы такой, сэр?'
+        redirect r(:all)
+      end
+    end
+  end
+  
   # csrf checks
   before_all do
     csrf_protection(:save, :delete, :run, :stop, :change_linked_tasks) do
@@ -31,6 +42,7 @@ class ResourceController < Controller
   end
 
   def show(resource_id)
+    check_permissions_and_redirect resource_id
     @resource = Resource[resource_id]
     if @resource
       # resource found
@@ -55,9 +67,9 @@ class ResourceController < Controller
 
   def new
     @resource  = Resource.new
+    @resource.author = @current_user
     @linked_tasks = []
     @available_tasks = []
-    @categories = categories_list()
     @submit_action = :create
     @csrf_token = get_csrf_token()
     @title = 'Создать самый новый ресурс'
@@ -65,6 +77,7 @@ class ResourceController < Controller
   end
 
   def edit(id)
+    check_permissions_and_redirect id
     @resource = Resource[id]
     if @resource.nil?
       flash[:error] = 'Невозможно редактировать: неправильный ресурс!'
@@ -82,6 +95,7 @@ class ResourceController < Controller
   def save
     redirect r(:all) unless request.post?
     id = request.params['id']
+    check_permissions_and_redirect id
 
     # Update resource
     if !id.nil? and !id.empty?
@@ -121,6 +135,7 @@ class ResourceController < Controller
   def delete
     redirect r(:all) unless request.post?
     id = request.params['id']
+    check_permissions_and_redirect id
 
     resource = Resource[id]
     if resource.nil?
@@ -131,10 +146,6 @@ class ResourceController < Controller
       flash[:success] = 'Всё окай, ресурс в топке'
       redirect r(:all)
     end
-  end
-
-  def categories_list
-    Category.all.map {|x| {x.id => x.name} }.reduce {|a, b| a.merge(b)}
   end
 
   def run
@@ -173,6 +184,7 @@ class ResourceController < Controller
 
   def change_linked_tasks
     id = request.params['id']
+    check_permissions_and_redirect id
     resource = Resource[id]
     tasks = []
     access_violated = false
@@ -197,7 +209,5 @@ class ResourceController < Controller
     end
 
   end
-
-  private :categories_list
 
 end

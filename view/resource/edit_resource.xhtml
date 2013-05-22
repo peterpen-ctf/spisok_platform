@@ -1,5 +1,6 @@
 <div class="row">
 <div class="span8">
+<p>Автор: #{@resource.author.full_name} (#{@resource.author.email})</p>
 #{form_for(@resource, :method => :post, :action => ResourceController.r(:save)) do |f|
   params = {:required => 'required'}
   submit_label = @submit_action == :create ? 'Создать ресурс' : 'Обновить'

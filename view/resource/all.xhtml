@@ -1,13 +1,12 @@
 <div class="tabbable">
-  <?r if logged_admin? ?>
   <div class="pull-right"> #{ResourceController.a('Создать ресурс', :new)} </div>
-  <?r end ?>
 
   <div class="tab-content">
     <div class="tab-pane active" id="all">
       <table class="table">
         <tr>
           <th>Ресурс</th>
+          <th>Автор</th>
           <th style="width:180px">Запущен</th>
           <th style="width:180px">Запрошен</th>
         </tr>
@@ -21,6 +20,7 @@
         <td>
           <a href="#{ResourceController.r(:edit, resource.id)}" class="label label-warning" title="управление"><i class="icon-edit icon-white"></i> #{resource.name}</a>
         </td>
+        <td>#{UserController.a("#{resource.author.full_name} (#{resource.author.email})", :show, resource.author.id)}
         <td>#{resource.is_running}</td>
         <td>#{resource.is_requested}</td>
       </tr>

@@ -121,7 +121,7 @@ class ResourceController < Controller
     resource_data[:is_requested] = request[:is_requested] ? true : false
 
     begin
-      resource_data = StringHelper.sanitize_basic(resource_data)
+      #resource_data = StringHelper.sanitize_basic(resource_data)
       resource.update(resource_data)
       flash[:success] = success
       redirect r(:all)
@@ -156,12 +156,31 @@ class ResourceController < Controller
     if resource.nil?
       flash[:error] = 'Невозможно запустить ресурс: неправильный id'
       redirect_referrer
+    #elsif resource.version != request.params['version']
+    #  flash[:error] = 'Resource version is obsolete'
+    #  redirect_referrer
     else
-      Ramaze::Log.error("#{id} запущен")
+      Ramaze::Log.error("running #{id}...")
+      tf = Tempfile.new(["platform", ".docker"])
+      
+      Ramaze::Log.error(tf.path)
+      tf.write resource.dockerfile
+      tf.close
+      image_msg = `docker build < #{tf.path}`
+      Ramaze::Log.error image_msg
+      image_id = image_msg.split[-1].chomp
+      Ramaze::Log.error "Image id: #{image_id}"
+      container_id = `docker run -d -p 12345 #{image_id}`.chomp
+      Ramaze::Log.error "Container id: #{container_id}"
+      host_port = `docker port #{container_id} 12345`
+      Ramaze::Log.error "Container port: #{host_port}"
+      #Ramaze::Log.error msg
       resource.is_running = true
+      resource.container_id = container_id
+      resource.host_port = host_port
       resource.save
       flash[:success] = 'Всё окай, ресурс запущен'
-      redirect r(:all)
+      redirect_referrer
     end
   end
 
@@ -174,8 +193,11 @@ class ResourceController < Controller
       flash[:error] = 'Невозможно остановить ресурс: неправильный id'
       redirect_referrer
     else
+      `docker stop #{resource.container_id}`
       Ramaze::Log.error("#{id} остановлен")
       resource.is_running = false
+      resource.container_id = nil
+      resource.host_port = nil
       resource.save
       flash[:success] = 'Всё окай, ресурс остановлен'
       redirect r(:all)

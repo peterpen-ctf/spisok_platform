@@ -20,8 +20,8 @@ Sequel.migration do
 
     # Add tasks
     tasks = DB[:tasks]
-    tasks.insert(:name => 'finder1', :description => 'find the key!', :category_id => 1, :answer_regex => 'ans1', :price => 100)
-    tasks.insert(:name => 'finder2', :description => 'find the key again!', :category_id => 1, :answer_regex => 'ans2', :price => 200)
+    tasks.insert(:name => 'finder1', :description => 'find the key!', :category_id => 1, :answer_regex => 'ans1', :price => 100, :author_id => 1)
+    tasks.insert(:name => 'finder2', :description => 'find the key again!', :category_id => 1, :answer_regex => 'ans2', :price => 200, :author_id => 3)
 
     resources = DB[:resources]
     resources.insert(:name => 'res1', :author_id => 1, :dockerfile => "df1", :is_requested => false, :is_running => false)

@@ -11,11 +11,14 @@ class TaskController < Controller
     end
   end
 
-  # admin actions
-  before(:new, :edit, :save, :delete) do
-    unless logged_admin?
-      flash[:error] = 'Вам не позволено совершать эти действия, сэр!'
-      redirect r(:all)
+  # admin or owner
+  def check_permissions_and_redirect(task_id)
+    if !logged_admin?
+      task = Task[task_id]
+      if task and task.author != @current_user
+        flash[:error] = 'Кто Вы такой, сэр?'
+        redirect r(:all)
+      end
     end
   end
 
@@ -32,7 +35,7 @@ class TaskController < Controller
 
   def show(task_id)
     @task = Task[task_id]
-    if @task and (@task.is_published or logged_admin?)
+    if @task and (@task.is_published or logged_admin? or @task.author.id == @current_user.id)
       # task found
       @title = @task.name
     else
@@ -44,17 +47,18 @@ class TaskController < Controller
   end
 
   def all
-    @tasks = Task.all.select { |x| x.is_published or logged_admin? }.sort {|a,b| a.price <=> b.price}
-    @tasks.each do |task|
-      # FIXME DAMN SHIT!!!
-      solvers_group = Solution.group_and_count(:task_id).where(:task_id => task.id).first
-      task.solvers_num = solvers_group ? solvers_group.values[:count] : 0
+    @tasks = Task.all.select { |x| x.is_published or logged_admin? or x.author == @current_user }.sort_by do |task|
+      task.author == @current_user? 0: -task.price
     end
+
+    @is_admin = logged_admin?
+
     @title = 'Все таски'
   end
 
   def new
     @task  = Task.new
+    @task.author = @current_user
     @categories = categories_list()
     @submit_action = :create
     @csrf_token = get_csrf_token()
@@ -68,6 +72,8 @@ class TaskController < Controller
       flash[:error] = 'Невозможно редактировать: неправильный таск!'
       redirect r(:all)
     end
+
+    check_permissions_and_redirect id
     @categories = categories_list()
     @title = 'Редактировать таск'
     @submit_action = :update
@@ -79,6 +85,7 @@ class TaskController < Controller
   def save
     redirect r(:all) unless request.post?
     id = request.params['id']
+    check_permissions_and_redirect id
 
     # Update task
     if !id.nil? and !id.empty?
@@ -94,6 +101,7 @@ class TaskController < Controller
     # New task
     else
       task = Task.new
+      task.author = @current_user
       success = 'Таск успешно создан'
       error = 'Невозможно создать таск!'
     end

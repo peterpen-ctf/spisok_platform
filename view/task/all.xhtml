@@ -1,7 +1,6 @@
 <div class="tabbable">
-  <?r if logged_admin? ?>
+
   <div class="pull-right"> #{TaskController.a('Создать таск', :new)} </div>
-  <?r end ?>
 
   <ul class="nav nav-pills">
     <li class="active"><a href="#all" data-toggle="tab"><i class="icon icon-white icon-star"></i> Все</a></li>
@@ -14,6 +13,7 @@
       <table class="table">
         <tr>
           <th>Задания</th>
+          <th>Автор</th>
           <th style="width:180px">Решили</th>
           <th style="width:180px">Цена</th>
         </tr>
@@ -26,11 +26,12 @@
         <tr<?r if !classes.empty? ?> class="#{classes.join ' '}"<?r end ?>>
         <td>
           #{TaskController.a(task.name, :show, task.id)}
-          <?r if logged_admin? ?>
+          <?r if logged_admin? or (task.author.id == @current_user.id) ?>
           <a href="#{TaskController.r(:edit, task.id)}" class="label label-warning" title="править"><i class="icon-edit icon-white"></i> править</a>
           <?r end ?>
           <span class="label label-info">#{ (task.category.nil? ? "no category" : task.category.name) }</span>
         </td>
+        <td>#{UserController.a("#{task.author.full_name} (#{task.author.email})", :show, task.author.id)}
         <td>#{task.solvers_num}</td>
         <td>#{task.price}</td>
       </tr>
@@ -60,9 +61,10 @@
       <?r if (@current_user.solved_tasks.include? task) then classes.push "success" end ?>
       <?r if (not task.is_published) then classes.push "warning" end ?>
       <tr<?r if !classes.empty? ?> class="#{classes.join ' '}"<?r end ?>>
+              <!--<p>#{task.author.id}</p><p>#{@current_user.id}</p>-->
       <td>
         #{TaskController.a(task.name, :show, task.id)}
-        <?r if logged_admin? ?>
+        <?r if logged_admin? or (task.author.id == @current_user.id) ?>
         <a href="#{TaskController.r(:edit, task.id)}" class="label label-warning" title="править"><i class="icon-edit icon-white"></i> править</a>
         <?r end ?>
       </td>

@@ -1,6 +1,10 @@
 <div class="row">
 <div class="span8">
 <p>Автор: #{@resource.author.full_name} (#{@resource.author.email})</p>
+<?r if @resource.is_running ?>
+<p>Container: #{@resource.container_id}</p>
+<p>Port: #{@resource.host_port}</p>
+<?r end ?>
 #{form_for(@resource, :method => :post, :action => ResourceController.r(:save)) do |f|
   params = {:required => 'required'}
   submit_label = @submit_action == :create ? 'Создать ресурс' : 'Обновить'
@@ -24,7 +28,7 @@ end}
 #{if @submit_action == :update and @resource and @resource.is_running
   form_for(@resource, :method => :post, :action => ResourceController.r(:stop)) do |f|
     f.input_hidden(:id)
-    f.input_submit('Остановить!', {:class => 'btn btn-info', :onClick => 'return confirm("А уверен ли?")'})
+    f.input_submit('Остановить!', {:class => 'btn btn-info'})
     f.input_hidden(:csrf_token, @csrf_token)
   end
 end}
@@ -33,7 +37,7 @@ end}
   form_for(@resource, :method => :post, :action => ResourceController.r(:run)) do |f|
     f.input_hidden(:id)
     f.input_hidden(:version)
-    f.input_submit('Запустить!', {:class => 'btn btn-success', :onClick => 'return confirm("А уверен ли?")'})
+    f.input_submit('Запустить!', {:class => 'btn btn-success'})
     f.input_hidden(:csrf_token, @csrf_token)
   end
 end}

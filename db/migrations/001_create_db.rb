@@ -75,6 +75,8 @@ Sequel.migration do
       Integer :version
       TrueClass :is_requested
       TrueClass :is_running
+      Integer :host_port
+      String :container_id
     end
 
     create_join_table({:resource_id => :resources, :task_id => :tasks})

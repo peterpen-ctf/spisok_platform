@@ -1,0 +1,18 @@
+<div>
+<?r if @contest.nil? ?>
+  Такой контест не найден!
+<?r else ?>
+  <h2> Параметры контеста №#{@contest.id} #{@contest.name} </h2>
+  <dl class="dl-horizontal">
+    <dt>Полное наименование</dt>
+    <dd>#{@contest.full_name}</dd>
+    <dt>Описание</dt>
+    <dd>#{@contest.description}</dd>
+    <dt>Организатор</dt>
+    <dd>#{@contest.organizer.full_name}</dd>
+    <dt>Статус</dt>
+    <dd style="color: #{@contest.is_approved ? 'green' : 'red'};">#{ (@contest.is_approved ? 'разрешено' : 'принята заявка') }</dd>
+  </dl>
+<br />
+<?r end ?>
+</div>

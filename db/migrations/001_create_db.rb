@@ -22,6 +22,9 @@ Sequel.migration do
       String :full_name
       String :description
       foreign_key :organizer_id, :users
+      
+      TrueClass :is_approved, :default => false, :null => false
+      TrueClass :is_published, :default => false, :null => false
     end
 
     create_table :categories do

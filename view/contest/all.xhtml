@@ -1,0 +1,30 @@
+<div class="pull-right"> #{ContestController.a('Создать контест', :new)} </div>
+<table class="table">
+  <tr>
+    <th> ID </th>
+    <th> Название </th>
+    <th> Полное наименование </th>
+    <th> Описание </th>
+    <th> Организатор </th>
+    <th> Статус </th>
+    <th> Published </th>
+  </tr>
+
+  <?r @contests.each do |contest| ?>
+  <!-- Для юзеров из чужих контестов отображаем только опубликованные -->
+  <?r if contest.is_published or logged_admin? or contest.organizer == @current_user ?>
+  <tr>
+    <td>#{contest.id}</td>
+    <td>
+      <a href="#{ContestController.r(:edit, contest.id)}">#{contest.name}</a>
+    </td>
+    <td>#{ (contest.full_name.to_s.length > 20) ? contest.full_name[0..20] + "..." : contest.full_name }</td>
+    <td>#{ (contest.description.to_s.length > 20) ? contest.description[0..20] + "..." : contest.description }</td>
+    <td>#{contest.organizer.full_name} <?r if contest.organizer == @current_user ?><span class="label label-info">Вы</span><?r end ?> </td>
+    <td style="color: #{contest.is_approved ? 'green' : 'red'};">#{ (contest.is_approved ? 'разрешено' : 'принята заявка') }</td>
+    <td style="color: #{contest.is_published ? 'green' : 'red'};">#{ (contest.is_published ? 'yes' : 'no') }</td>
+  </tr>
+  <?r end ?>
+  <?r end ?>
+
+</table>

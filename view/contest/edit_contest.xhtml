@@ -1,0 +1,30 @@
+<div>
+#{form_for(@contest, :method => :post, :action => ContestController.r(:save)) do |f|
+  params = {:required => 'required'}
+  submit_label = @submit_action == :create ? 'Создать контест' : 'Обновить контест'
+  f.input_hidden(:id)
+  f.input_text('Название контеста', :name, params.merge({:class => 'input-xxlarge'}))
+  f.input_text('Полное наименование контеста', :full_name, params.merge({:class => 'input-xxlarge'}))
+  f.textarea('Описание контеста', :description, params.merge({:class => 'input-xxlarge', :rows => 8}))
+  
+  cb_opts = {:show_value => false}
+  f.input_checkbox("Опубликовать", :is_published, checked=(@contest.is_published ? @contest.is_published : nil), cb_opts)
+
+  if logged_admin?
+    cb_opts = {:show_value => false}
+    f.input_checkbox("Разрешить", :is_approved, checked=(@contest.is_approved ? @contest.is_approved : nil), cb_opts)
+  end
+
+  f.input_submit(submit_label, {:class => 'btn btn-primary'})
+  f.input_hidden(:csrf_token, @csrf_token)
+end}
+
+
+#{if @submit_action == :update
+  form_for(@contest, :method => :post, :action => ContestController.r(:delete)) do |f|
+    f.input_hidden(:id)
+    f.input_submit('Удалить контест', {:class => 'btn btn-danger', :onClick => 'return confirm("А уверен ли?")'})
+    f.input_hidden(:csrf_token, @csrf_token)
+  end
+end}
+</div>

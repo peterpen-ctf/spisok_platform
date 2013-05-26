@@ -41,6 +41,10 @@ CMD [\"/usr/local/bin/backdoor\"]
 "
     resources.insert(:name => 'actual resource', :author_id => 3, :dockerfile => actual_df, :is_requested => true, :is_running => false)
 
+    contests = DB[:contests]
+    contests.insert(:name => 'llama_contest1', :full_name => 'Contest by Llama #1', :description => 'Описание', :organizer_id => 1, :is_approved => true)
+    contests.insert(:name => 'llama_contest2', :full_name => 'Contest by Llama #2', :description => 'Full description', :organizer_id => 1, :is_published => true)
+    contests.insert(:name => 'alpaca_contest1', :full_name => 'Contest by Alpaca #1', :description => 'Some weird stuff', :organizer_id => 2)
 
   end
 

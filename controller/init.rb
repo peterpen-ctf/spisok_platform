@@ -24,6 +24,7 @@ class Controller < Ramaze::Controller
     @current_user = logged_in? ? user : nil
   end
 
+
   def logged_admin?
     logged_in? and @current_user.is_admin
   end
@@ -44,6 +45,42 @@ class Controller < Ramaze::Controller
     @img_path = LLAMA_DIR + File.basename(all_llamas.sample)
     render_file("#{Ramaze.options.views[0]}/error.xhtml")
   end
+
+
+  class UnknownRecordException < StandardError
+    def initialize(msg = "Запись с заданными параметрами отсутствует в базе.")
+      super(msg)
+    end
+  end
+
+
+  # Finds the entity in the given +model+ by +id+. Returns it in case
+  # such entity exists. Otherwise raises an exception with the error
+  # message +err_msg+. Provide block returning boolean if you need to
+  # to enforce specific restrictions on the chosen entity.
+  #
+  # * *Args*    :
+  #   - +id+ -> id of record
+  #   - +model+ -> ORM interface for specific entities'
+  #   - +err_msg+ -> error message
+  #   - +&cond+ -> block {|x| boolean}, forcing specific condition on x
+  # * *Returns* :
+  #   - entity with the given id
+  # * *Raises* :
+  #   - +UnknownRecordException+ -> if record with the specified id
+  #     doesn't exist
+  #
+  def get_entity_by_id(id, model, err_msg, &cond)
+    cond ||= proc { true } # cond defaults to proc { true }
+
+    if !id.nil? and !id.empty?
+      record = model[id]
+    end
+    
+    raise UnknownRecordException, err_msg unless !record.nil? and cond.(record)
+    return record
+  end
+
 
   def get_controller_class
     self.class

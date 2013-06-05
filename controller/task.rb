@@ -33,6 +33,7 @@ class TaskController < Controller
     redirect r(:all)
   end
 
+
   def show(task_id)
     @task = Task[task_id]
     if @task and (@task.is_published or logged_admin? or @task.author.id == @current_user.id)
@@ -46,25 +47,43 @@ class TaskController < Controller
     render_view :task_desc
   end
 
+
   def all
-    @tasks = Task.all.select { |x| x.is_published or logged_admin? or x.author == @current_user }.sort_by do |task|
-      task.author == @current_user? 0: -task.price
+    @tasks = Task.all.select do |task|
+      logged_admin? or
+      (task.is_published and task.contest.is_published) or
+      task.author == @current_user
+    end.sort_by do |task|
+      task.author == @current_user ? 0 : -task.price
+    end
+    
+    @contests = make_select_list(Contest) do |contest|
+      logged_admin? or
+      (contest.is_published and
+        @tasks.select do |task|
+          task.contest == contest
+        end.length > 0) or
+      contest.organizer == @current_user
     end
 
     @is_admin = logged_admin?
-
     @title = 'Все таски'
   end
+
 
   def new
     @task  = Task.new
     @task.author = @current_user
-    @categories = categories_list()
+    @contests = make_select_list(Contest) do |contest|
+      logged_admin? or contest.organizer == @current_user
+    end
+    @categories = make_select_list(Category)
     @submit_action = :create
     @csrf_token = get_csrf_token()
     @title = 'Создать самый новый таск'
     render_view :edit_task
   end
+
 
   def edit(id)
     @task = Task[id]
@@ -74,7 +93,10 @@ class TaskController < Controller
     end
 
     check_permissions_and_redirect id
-    @categories = categories_list()
+    @contests = make_select_list(Contest) do |contest|
+      logged_admin? or contest.organizer == @current_user
+    end
+    @categories = make_select_list(Category)
     @title = 'Редактировать таск'
     @submit_action = :update
     @csrf_token = get_csrf_token()
@@ -108,21 +130,25 @@ class TaskController < Controller
 
     task_data = request.subset(:name, :description, :answer_regex, :price)
     task_data[:is_published] = request[:is_published] ? true : false
-    category_id = request[:category]
-
-    if !category_id.nil? and !category_id.empty?
-        category = Category[category_id]
-        if category.nil?
-            flash[:error] = 'Нет такой категории'
-        end
-    end
-
+    
     begin
+      category_id = request[:category]
+      category = get_entity_by_id(category_id, Category, 'Нет такой категории')
+      contest_id = request[:contest]
+      contest = get_entity_by_id(contest_id, Contest, 'Неверно выбран контест') do |contest|
+        logged_admin? or contest.organizer == @current_user
+      end
+    
       task_data = StringHelper.sanitize_basic(task_data)
       task_data[:category] = category
+      task_data[:contest] = contest
       task.update(task_data)
       flash[:success] = success
       redirect r(:all)
+    rescue UnknownRecordException => e
+      Ramaze::Log.error(e)
+      flash[:error] = (e.message.nil? or e.message.empty?) ? error : e.message
+      redirect_referrer
     rescue => e
       Ramaze::Log.error(e)
       flash[:error] = error
@@ -164,11 +190,32 @@ class TaskController < Controller
       redirect r(:all)
     end
   end
-
-  def categories_list
-    Category.all.map {|x| {x.id => x.name} }.reduce {|a, b| a.merge(b)}
+  
+  # Returns a valid hash for html form select element, combined of all entities
+  # for the given +model+, where only id and name attributes are taken as
+  # values and keys correspondingly. Provide block returning boolean if you
+  # need to select only specific entities.
+  #
+  # * *Args*    :
+  #   - +model+ -> ORM interface for specific entities'
+  #   - +&cond+ -> block {|x| boolean}, filtering entities upon iterations
+  # * *Returns* :
+  #   - hash of {entity.id => entity.name}
+  #
+  def make_select_list(model, &cond)
+=begin
+    cond = lambda {|a| true} unless block_given?  # always true functor, if no block was given
+    # Entities filtered by cond, followed by filtration by (id, name)
+    # In reduce: a - accumulator, b - element
+    model.all.map {|x| (cond.call(x) ? {x.id => x.name} : {}) }.reduce {|a, b| a.merge(b)}
+=end
+    
+    cond ||= proc { true } # cond defaults to proc { true }
+    # Entities filtered by cond, followed by filtration by (id, name)
+    model.all.map do |x|
+      cond.(x) ? {x.id => x.name} : {}
+    end.reduce Hash.new do |memo, e| memo.merge(e) end
   end
 
-  private :categories_list
-
+  private :make_select_list
 end

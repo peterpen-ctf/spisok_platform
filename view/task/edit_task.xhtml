@@ -4,7 +4,17 @@
   submit_label = @submit_action == :create ? 'Создать таск' : 'Обновить таск'
   f.input_hidden(:id)
   f.input_text('Название таска', :name, params.merge({:class => 'input-xxlarge'}))
-  f.select('Категория', :category, params.merge({:values => @categories, :selected => (@task.category.nil? ? nil : @task.category.id) }))
+  f.g.table do
+    f.g.tr do
+      select_opts = {:size => 1}
+      f.g.td do
+        f.select('Контест', :contest, params.merge({:values => @contests, :selected => (@task.contest.nil? ? nil : @task.contest.id)}).merge(select_opts))
+      end
+      f.g.td do
+        f.select('Категория', :category, params.merge({:values => @categories, :selected => (@task.category.nil? ? nil : @task.category.id)}).merge(select_opts))
+      end
+    end
+  end
   f.textarea('Описание таска', :description, params.merge({:class => 'input-xxlarge', :rows => 8}))
   f.input_text('Ответ', :answer_regex, params.merge({:class => 'input-xxlarge'}))
   f.input_text('Стоимость', :price, params.merge({:class => 'input-mini'}))

@@ -15,14 +15,27 @@ Sequel.migration do
 
     users[:id=>1] = {:is_admin => true}
 
+    # Add categories
     categories = DB[:categories]
     categories.insert({:name => 'reverse', :description => 'esrever'})
 
+    # Add contests
+    contests = DB[:contests]
+    contests.insert(:name => 'llama_contest1', :full_name => 'Contest by Llama #1', :description => 'Описание', :organizer_id => 1, :is_published => true)
+    contests.insert(:name => 'llama_contest2', :full_name => 'Contest by Llama #2', :description => 'Full description', :organizer_id => 1, :is_approved => true)
+    contests.insert(:name => 'alpaca_contest1', :full_name => 'Contest by Alpaca #1', :description => 'Some weird stuff', :organizer_id => 2)
+    contests.insert(:name => 'vicugna_contest1', :full_name => 'Contest by Vicugna #1', :description => 'Some weird stuff', :organizer_id => 3, :is_published => true)
+    contests.insert(:name => 'guanaco_contest1', :full_name => 'Contest by Guanaco #1', :description => 'Some weird stuff', :organizer_id => 4, :is_approved => true)
+
     # Add tasks
     tasks = DB[:tasks]
-    tasks.insert(:name => 'finder1', :description => 'find the key!', :category_id => 1, :answer_regex => 'ans1', :price => 100, :author_id => 1)
-    tasks.insert(:name => 'finder2', :description => 'find the key again!', :category_id => 1, :answer_regex => 'ans2', :price => 200, :author_id => 3)
+    tasks.insert(:name => 'llama_task_1', :description => 'find the key!', :category_id => 1, :contest_id => 1, :answer_regex => 'ans1', :price => 100, :author_id => 1, :is_published => true)
+    tasks.insert(:name => 'vicugna_task_1', :description => 'find the key!', :category_id => 1, :contest_id => 2, :answer_regex => 'ans1', :price => 100, :author_id => 3)
+    tasks.insert(:name => 'alpaca_contest_1', :description => 'find the key!', :category_id => 1, :contest_id => 3, :answer_regex => 'ans1', :price => 100, :author_id => 2)
+    tasks.insert(:name => 'alpaca_contest_2', :description => 'find the key again!', :category_id => 1, :contest_id => 3, :answer_regex => 'ans2', :price => 200, :author_id => 2, :is_published => true)
+    tasks.insert(:name => 'guanaco_contest_2', :description => 'find the key!', :category_id => 1, :contest_id => 5, :answer_regex => 'ans1', :price => 100, :author_id => 4)
 
+    # Add resources
     resources = DB[:resources]
     resources.insert(:name => 'res1', :author_id => 1, :dockerfile => "df1", :is_requested => false, :is_running => false)
     resources.insert(:name => 'res2', :author_id => 2, :dockerfile => "df2", :is_requested => false, :is_running => false)
@@ -40,11 +53,6 @@ RUN echo 'ThIs_is_th3_Ansvv34' > /etc/secret
 CMD [\"/usr/local/bin/backdoor\"]
 "
     resources.insert(:name => 'actual resource', :author_id => 3, :dockerfile => actual_df, :is_requested => true, :is_running => false)
-
-    contests = DB[:contests]
-    contests.insert(:name => 'llama_contest1', :full_name => 'Contest by Llama #1', :description => 'Описание', :organizer_id => 1, :is_approved => true)
-    contests.insert(:name => 'llama_contest2', :full_name => 'Contest by Llama #2', :description => 'Full description', :organizer_id => 1, :is_published => true)
-    contests.insert(:name => 'alpaca_contest1', :full_name => 'Contest by Alpaca #1', :description => 'Some weird stuff', :organizer_id => 2)
 
   end
 

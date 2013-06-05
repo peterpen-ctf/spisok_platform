@@ -1,13 +1,65 @@
+<script src="/js/ppctf/task.js"></script>
 <div class="tabbable">
+
+    <script>
+    var CONTEST = {
+      onReady : function() {
+        $select = $( "#select-contest" );
+        $select.on("change", function(event) {
+          $select.find( "option:selected" ).each(function() {
+            $this = $( this );
+            
+            if ($this.val() === "all") {
+              $selected = $("tr:regex(class, contest-.*)");
+              $selected.removeClass("hidden");
+            } else {
+              $selected = $("tr.contest-" + $this.val());
+              $other = $("tr:regex(class, contest-(?!" + $this.val() + "))");
+              $other.addClass("hidden");
+              $selected.removeClass("hidden");
+            }
+          });
+        })
+      }
+    }
+    
+    $( document ).ready(function() {
+
+      CONTEST.onReady();
+      
+    });
+    </script>
 
   <div class="pull-right"> #{TaskController.a('Создать таск', :new)} </div>
 
-  <ul class="nav nav-pills">
-    <li class="active"><a href="#all" data-toggle="tab"><i class="icon icon-white icon-star"></i> Все</a></li>
-    <?r Category.all.each do |cat| ?>
-    <li><a href="#cat#{cat.id}" data-toggle="tab">#{cat.name}</a></li>
-    <?r end ?>
-  </ul>
+  <table>
+    <tr>
+      <td>
+        <div style="padding: 0px 10px 20px 0px">Категории:</div>
+      </td>
+      <td>
+      <ul class="nav nav-pills">
+        <li class="active"><a href="#all" data-toggle="tab"><i class="icon icon-white icon-star"></i> Все</a></li>
+        <?r Category.all.each do |cat| ?>
+        <li><a href="#cat#{cat.id}" data-toggle="tab">#{cat.name}</a></li>
+        <?r end ?>
+      </ul>
+      </td>
+    </tr>
+    <tr style="vertical-align: baseline">
+      <td>
+        <div style="padding-right: 20px">Контесты:</div>
+      </td>
+      <td>
+        <select id="select-contest">
+          <option value="all" selected="selected">Все</option>
+          <?r @contests.each do |contest| ?>
+          <option value="#{contest[0]}">#{contest[1]}</option>
+          <?r end ?>
+        </select>
+      </td>
+    </tr>
+  </table>
   <div class="tab-content">
     <div class="tab-pane active" id="all">
       <table class="table">
@@ -23,10 +75,11 @@
         <?r classes = [] ?>
         <?r if (@current_user.solved_tasks.include? task) then classes.push "success" end ?>
         <?r if (not task.is_published) then classes.push "warning" end ?>
+        <?r classes.push "contest-" + task.contest_id.to_s ?>
         <tr<?r if !classes.empty? ?> class="#{classes.join ' '}"<?r end ?>>
         <td>
           #{TaskController.a(task.name, :show, task.id)}
-          <?r if logged_admin? or (task.author.id == @current_user.id) ?>
+          <?r if logged_admin? or (task.author == @current_user) ?>
           <a href="#{TaskController.r(:edit, task.id)}" class="label label-warning" title="править"><i class="icon-edit icon-white"></i> править</a>
           <?r end ?>
           <span class="label label-info">#{ (task.category.nil? ? "no category" : task.category.name) }</span>
@@ -60,6 +113,7 @@
       <?r classes = [] ?>
       <?r if (@current_user.solved_tasks.include? task) then classes.push "success" end ?>
       <?r if (not task.is_published) then classes.push "warning" end ?>
+      <?r classes.push "contest-" + task.contest_id.to_s ?>
       <tr<?r if !classes.empty? ?> class="#{classes.join ' '}"<?r end ?>>
               <!--<p>#{task.author.id}</p><p>#{@current_user.id}</p>-->
       <td>

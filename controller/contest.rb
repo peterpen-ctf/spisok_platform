@@ -3,14 +3,6 @@
 class ContestController < Controller
   map '/contest'
 
-  # admin actions
-#  before(:show, :all) do
-#    if !logged_admin?
-#      flash[:error] = 'Вам сюда нельзя!'
-#      redirect '/'
-#    end
-#  end
-
   # basic actions
   before(:show, :all) do
     unless logged_in?
@@ -87,8 +79,6 @@ class ContestController < Controller
 
     # Update contest
     if !id.nil? and !id.empty?
-      #flash[:error] = 'id = ' + id
-      #redirect r(:all)
       contest = Contest[id]
       if contest.nil?
         flash[:error] = 'Неправильный контест. WTF?'

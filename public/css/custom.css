@@ -47,3 +47,7 @@ footer
 {
     background-color: lightseagreen;
 }
+
+.hidden {
+    display: none;
+}

@@ -14,6 +14,14 @@ Prepare database:
 Gogogo!
 
     $ bundle exec rake ramaze:start
+    
+#### TODO
+
+* Change template engine (HAML?)
+* Fix layout
+* Hardcore refactoring
+* Resources, contests - do we need these?
+* Rewrite in Rails?
 
 ### Thanks
 

@@ -13,7 +13,7 @@ Sequel.migration do
                    :full_name => email + " The Camelidae", :is_disabled => false)
     end
 
-    users[:id=>1] = {:is_admin => true}
+    users.where(:id => 1).update(:is_admin => true)
 
     # Add categories
     categories = DB[:categories]

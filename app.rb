@@ -4,8 +4,10 @@
 # parts of the application.
 
 require 'rubygems'
+require 'em/pure_ruby'
 require 'ramaze'
 require 'sequel'
+require 'pry'
 
 # Make sure that Ramaze knows where you are
 Ramaze.options.roots = [__DIR__]
